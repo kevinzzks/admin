@@ -9,6 +9,8 @@
   <script>
   // import  from ''; // 引入组件
   // import  from '';
+  
+import api from '@/api/index.js';
   export default {
     name: 'LoGin',
     components: {},
@@ -18,7 +20,18 @@
       return {}
     },
     // 生命周期 - 创建完成（访问当前this实例）
-    created () {},
+    created () {
+      api.getRealmRoles().then(res => {
+        console.log(res)
+        if (res.data.code === 200) {
+          this.$message.error('访问成功！')
+        } else {
+          this.$message.error('访问失败！')
+        }
+      }).catch(err => {
+        this.$message.error(err)
+      })
+    },
     // 生命周期 - 挂载完成（访问DOM元素）
     mounted () {},
     computed: {},

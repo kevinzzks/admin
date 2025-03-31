@@ -14,71 +14,31 @@
           <img src="@/assets/img/header_logo.png" alt="Header Logo" />
         </div>
       </div>
-      <div class="header-right">个人设置</div>
+      <div class="header-right">
+        <div class="switch">
+          <a-switch :checked="state.theme === 'dark'" @change="changeTheme" />
+          <span class="ant-divider" style="margin: 0 1em" />
+          Change Theme
+        </div>个人设置
+      </div>
     </a-layout-header>
     <a-layout-content class="content-wrapper" style="padding: 0 50px">
-      <a-breadcrumb class="breadcrumb" style="margin: 16px 0">
-        <div class="switch">
-          <a-switch :checked="state.mode === 'vertical'" @change="changeMode" />Change Mode
-          <span class="ant-divider" style="margin: 0 1em" />
-          <a-switch :checked="state.theme === 'dark'" @change="changeTheme" />Change Theme
-        </div>
-      </a-breadcrumb>
+      <a-breadcrumb class="breadcrumb" style="margin: 16px 0"></a-breadcrumb>
       <a-layout class="content-fill" style="padding: 24px 0; background: #fff">
-        <a-layout-sider
-          width="200"
-          style="background: #fff"
-          v-model:collapsed="collapsed"
-          :trigger="null"
-          collapsible
-        >
+        <a-layout-sider width="200" v-model:collapsed="collapsed" :trigger="null" collapsible>
           <a-menu
-            :mode="state.mode"
             :theme="state.theme"
-            v-model:selectedKeys="selectedWeb"
-            v-model:openKeys="openKeys"
+            :selectedKeys="[defaultKey]"
+            v-model:openKeys="state.openKeys"
             style="height: 100%"
+            @click="onClickMenuItem"
           >
-            <a-menu-item key="menu1">
-              <user-outlined />
-              <span>menu 1</span>
-            </a-menu-item>
-            <a-sub-menu key="sub1">
-              <template #title>
-                <span>
-                  <user-outlined />
-                  <span>subnav 1</span>
-                </span>
-              </template>
-              <a-menu-item key="1">option1</a-menu-item>
-              <a-menu-item key="2">option2</a-menu-item>
-              <a-menu-item key="3">option3</a-menu-item>
-              <a-menu-item key="4">option4</a-menu-item>
-            </a-sub-menu>
-            <a-sub-menu key="sub2">
-              <template #title>
-                <span>
-                  <laptop-outlined />
-                  <span>subnav 2</span>
-                </span>
-              </template>
-              <a-menu-item key="5">option5</a-menu-item>
-              <a-menu-item key="6">option6</a-menu-item>
-              <a-menu-item key="7">option7</a-menu-item>
-              <a-menu-item key="8">option8</a-menu-item>
-            </a-sub-menu>
-            <a-sub-menu key="sub3">
-              <template #title>
-                <span>
-                  <notification-outlined />
-                  <span>subnav 3</span>
-                </span>
-              </template>
-              <a-menu-item key="9">option9</a-menu-item>
-              <a-menu-item key="10">option10</a-menu-item>
-              <a-menu-item key="11">option11</a-menu-item>
-              <a-menu-item key="12">option12</a-menu-item>
-            </a-sub-menu>
+            <template v-for="item in menuList" :key="item.key">
+              <a-menu-item>
+                <component :is="item.icon" />
+                <span>{{ item.label }}</span>
+              </a-menu-item>
+            </template>
           </a-menu>
         </a-layout-sider>
         <a-layout-content :style="{ padding: '0 24px', minHeight: '680px' }">
@@ -91,46 +51,82 @@
 </template>
 <script>
 // import { ref } from 'vue';
-import { UserOutlined, LaptopOutlined, NotificationOutlined } from '@ant-design/icons-vue';
+// import { UserOutlined, LaptopOutlined, NotificationOutlined } from '@ant-design/icons-vue';
 import {
   MenuUnfoldOutlined,
   MenuFoldOutlined,
 } from '@ant-design/icons-vue';
+import { message } from 'ant-design-vue';
 export default {
-  name: 'LoGin',
+  name: 'HOME',
   components: {
     MenuUnfoldOutlined,
     MenuFoldOutlined,
-    UserOutlined,
-    LaptopOutlined,
-    NotificationOutlined
+    // UserOutlined,
+    // LaptopOutlined,
+    // NotificationOutlined
   },
   data() {
     return {
-      selectedKeys1: ['2'],
-      selectedWeb: ['1'],
-      openKeys: ['sub1'],
       collapsed: false,
       state: {
-        mode: 'inline',
-        theme: 'light',
+        theme: 'dark',
         selectedKeys: ['1'],
-        openKeys: ['sub1'],
-      }
+        openKeys: ['home/menu'],
+      },
+      // 侧边栏数据
+      menuList: []
     }
   },
   // 生命周期 - 创建完成（访问当前this实例）
-  created() { },
+  created() {
+    this.menuList = this.$router.options.routes[1].children.map(item => {
+      return {
+        key: item.meta.pathname,
+        title: item.meta.title,
+        icon: item.meta.icon,
+        label: item.meta.title,
+        children: item.children ? item.children.map(child => {
+          return {
+            key: child.meta.pathname,
+            title: child.meta.title,
+            icon: child.meta.icon,
+            label: child.meta.title,
+            children: child.children ? child.children.map(subChild => {
+              return {
+                key: subChild.meta.pathname,
+                title: subChild.meta.title,
+                icon: subChild.meta.icon,
+                label: subChild.meta.title,
+              }
+            }) : null
+
+          }
+        }) : null
+      }
+    });
+  },
   // 生命周期 - 挂载完成（访问DOM元素）
   mounted() { },
-  computed: {},
+  computed: {
+    defaultKey() {
+      let pathKey = this.$route.path;
+      if (pathKey === '/home') {
+        return '/home/menu1';
+      }
+      return pathKey;
+    },
+  },
   // Vue方法定义
   methods: {
-    changeMode(checked) {
-      this.state.mode = checked ? 'vertical' : 'inline';
-    },
     changeTheme(checked) {
       this.state.theme = checked ? 'dark' : 'light';
+    },
+    onClickMenuItem(item) {
+      console.log(item);
+      // 处理菜单项点击事件
+      this.$router.push(item.key);
+      message.info(`You selected ${item.key}`);
     },
   }
 }

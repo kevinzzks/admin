@@ -10,7 +10,7 @@ module.exports = defineConfig({
     port: 8081, // 默认端口，可以根据需要修改
     proxy: {
       '/proxyApi': {
-        target: 'https://global-test.lenovomm.cn/',
+        target: 'https://10.96.177.104:8443/',
         pathRewrite: { '^/proxyApi': '' }, // 重写以 /api 开头的路径
         secure: false,
         changeOrigin: true // 必须设置，用于虚拟主机的情况
