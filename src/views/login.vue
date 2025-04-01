@@ -56,17 +56,17 @@ export default {
   methods: {
     submitClick() {
       console.log(this.user)
-      api.checkPLogin(this.user).then(res => {
-        console.log(res)
-        if (res.data.code === 200) {
-          this.$message.success('登录成功！')
-          this.$router.push({ path: '/home' })
-        } else {
-          this.$message.error('登录失败！')
-        }
-      }).catch(err => {
-        this.$message.error(err)
-      })
+      // api.checkPLogin(this.user).then(res => {
+      //   console.log(res)
+      //   if (res.data.code === 200) {
+      //     this.$message.success('登录成功！')
+      //     this.$router.push({ path: '/home' })
+      //   } else {
+      //     this.$message.error('登录失败！')
+      //   }
+      // }).catch(err => {
+      //   this.$message.error(err)
+      // })
       
     }
   }

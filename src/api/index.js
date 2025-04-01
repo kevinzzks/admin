@@ -35,23 +35,7 @@ async function checkPLogin(data) {
     // })
 }
 
-// 询问登录状态
-async function getRealmRoles() {
-   
-    // let pushDate ={
-    //     "webauthn_action": data["webauthn_action"],
-    //     "webauthn_realm":  data["webauthn_realm"],
-    //     "webauthn_lang":  data["webauthn_lang"],
-    //     "webauthn_callback":  data["webauthn_callback"],
-    //     "webauthn_state":  data["webauthn_state"]
-    //   }
-    return await http({
-        method: "get",
-        url: http.adornUrl(`/admin/realms/master/roles?first=0&max=11`),
-        // params: pushDate,
-        withCredentials: true
-    })
-}
+
 
 
 
@@ -75,5 +59,5 @@ async function authenticate (data) {
 }
 
 export default {
-    checkPLogin,authenticate, getRealmRoles
+    checkPLogin,authenticate, 
 } 

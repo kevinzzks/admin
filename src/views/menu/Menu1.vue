@@ -10,9 +10,9 @@
   // import  from ''; // 引入组件
   // import  from '';
   
-import api from '@/api/index.js';
+import api from '@/api/realm.js';
   export default {
-    name: 'LoGin',
+    name: 'realmRoles',
     components: {},
     // inheritAttrs: false,
     // props: ['mess'],

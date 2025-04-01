@@ -165,7 +165,7 @@ export default {
   .collapsed {
     display: flex;
     margin: auto 50px;
-    .anticon-menu-fold {
+    .anticon-menu-fold, .anticon-menu-unfold{
       font-size: 24px;
     }
   }

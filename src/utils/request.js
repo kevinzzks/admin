@@ -13,9 +13,7 @@ const http = axios.create({
  */
 http.interceptors.request.use(
   (config) => {
-    // let local = store.state.eternal.lang;
-    // config.headers['Accept-Language'] = local + ',zh;q=0.9,sv;q=0.8,my;q=0.7,sq;q=0.6,fr;q=0.5';
-    return config;
+   return config;
   },
   (error) => {
     return Promise.reject(error);
@@ -32,15 +30,6 @@ http.interceptors.response.use(
   },
   (error) => {
     console.error('响应拦截器捕获错误:', error);
-    // 'USS-0150' 只要出现这个错误，就跳转到错误页面
-    // if (error.response && error.response.data && error.response.data.code == 'USS-0150') {
-    //   let data = JSON.parse(error.response.data.data);
-    //   store.commit('ruler/setlinkError', {
-    //     CorrelationID: data.id,
-    //     Timestamp: data.time,
-    //   });
-    //   store.commit("ruler/setStep",11);
-    // }
     return Promise.reject(error.response); // 返回接口返回的错误信息
   }
 );
