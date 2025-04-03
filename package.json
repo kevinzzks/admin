@@ -12,6 +12,8 @@
     "ant-design-vue": "^4.2.6",
     "axios": "^1.8.4",
     "core-js": "^3.8.3",
+    "js-cookie": "^3.0.5",
+    "keycloak-js": "^26.1.4",
     "vue": "^3.2.13",
     "vue-router": "^4.5.0",
     "vuex": "^4.1.0"

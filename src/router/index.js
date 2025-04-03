@@ -5,25 +5,36 @@ import { h } from 'vue';
 const routes = [
   {
     path: '/',
-    redirect: '/login'
+    redirect: '/login',
   },
  
   {
     path: '/home',
     name: 'Home',
     component: () => import('@/views/home.vue'),
-    redirect: '/home/menu1',
+    redirect: '/home/roles',
     children: [
       {
-        path: 'menu1',
-        name: 'Menu1',
-        component: () => import('@/views/menu/Menu1.vue'),
+        path: 'roles',
+        name: 'Roles',
+        component: () => import('@/views/menu/roles/index.vue'),
         meta: {
-          title: '账号管理',
+          title: 'Realm roles',
           icon: h(UserOutlined),
-          pathname: '/home/menu1',
+          pathname: '/home/roles',
           keepAlive: true
         },
+        children: [
+          {
+            path: 'new',
+            name: 'CreateRealmRole',
+            component: () => import('@/views/menu/roles/createRealmRole.vue'),
+            meta: {
+              pathname: '/home/roles/new',
+              keepAlive: false
+            },
+          },
+        ]
       },
       {
         path: 'menu2',
@@ -52,7 +63,7 @@ const routes = [
   {
     path: '/login',
     name: 'Login',
-    component: () => import('@/views/login.vue'),
+    component: () => import('@/views/login/login.vue'),
   },
 ];
 

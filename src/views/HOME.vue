@@ -19,7 +19,34 @@
           <a-switch :checked="state.theme === 'dark'" @change="changeTheme" />
           <span class="ant-divider" style="margin: 0 1em" />
           Change Theme
-        </div>个人设置
+        </div>
+        <div class="user-info">
+          <a-dropdown placement="bottom" :arrow="{ pointAtCenter: true }">
+            <a-button>admin</a-button>
+            <template #overlay>
+              <a-menu>
+                <a-menu-item>
+                  <a href="javascript:;">Manage account</a>
+                </a-menu-item>
+                <a-menu-item>
+                  <a href="javascript:;">Realm info</a>
+                </a-menu-item>
+                <a-menu-item>
+                  <a href="javascript:;">Clear Caches</a>
+                </a-menu-item>
+                <a-menu-divider />
+                <a-menu-item>
+                  <a href="javascript:;" @click="onSignout">Sign out</a>
+                </a-menu-item>
+              </a-menu>
+            </template>
+          </a-dropdown>&nbsp;
+          <a-avatar :size="32">
+            <template #icon>
+              <UserOutlined />
+            </template>
+          </a-avatar>
+        </div>
       </div>
     </a-layout-header>
     <a-layout-content class="content-wrapper" style="padding: 0 50px">
@@ -51,20 +78,17 @@
 </template>
 <script>
 // import { ref } from 'vue';
-// import { UserOutlined, LaptopOutlined, NotificationOutlined } from '@ant-design/icons-vue';
 import {
   MenuUnfoldOutlined,
-  MenuFoldOutlined,
+  MenuFoldOutlined, UserOutlined
 } from '@ant-design/icons-vue';
 import { message } from 'ant-design-vue';
+import api from '@/api/index.js';
 export default {
   name: 'HOME',
   components: {
     MenuUnfoldOutlined,
-    MenuFoldOutlined,
-    // UserOutlined,
-    // LaptopOutlined,
-    // NotificationOutlined
+    MenuFoldOutlined, UserOutlined
   },
   data() {
     return {
@@ -72,7 +96,7 @@ export default {
       state: {
         theme: 'dark',
         selectedKeys: ['1'],
-        openKeys: ['home/menu'],
+        openKeys: ['home/roles'],
       },
       // 侧边栏数据
       menuList: []
@@ -80,6 +104,7 @@ export default {
   },
   // 生命周期 - 创建完成（访问当前this实例）
   created() {
+    window.global = this;
     this.menuList = this.$router.options.routes[1].children.map(item => {
       return {
         key: item.meta.pathname,
@@ -111,8 +136,8 @@ export default {
   computed: {
     defaultKey() {
       let pathKey = this.$route.path;
-      if (pathKey === '/home') {
-        return '/home/menu1';
+      if (pathKey.indexOf('roles/new') !== -1) {
+        return '/home/roles';
       }
       return pathKey;
     },
@@ -123,10 +148,27 @@ export default {
       this.state.theme = checked ? 'dark' : 'light';
     },
     onClickMenuItem(item) {
-      console.log(item);
       // 处理菜单项点击事件
       this.$router.push(item.key);
       message.info(`You selected ${item.key}`);
+    },
+    onSignout() {
+      const token = this.$Cookies.get('refresh_token')
+      if (!token) {
+        this.$router.push('/login');
+        return;
+      }
+      api.logout(token).then(res => {
+        if (res.status === 200 || res.status === 204) {
+          message.success('Sign out successfully!');
+          this.$router.push('/login');
+        } else {
+          message.error('Sign out failed!');
+        }
+      }).catch(error => {
+        console.error('Error during sign out', error);
+        message.error('Sign out failed!');
+      });
     },
   }
 }
@@ -165,7 +207,8 @@ export default {
   .collapsed {
     display: flex;
     margin: auto 50px;
-    .anticon-menu-fold, .anticon-menu-unfold{
+    .anticon-menu-fold,
+    .anticon-menu-unfold {
       font-size: 24px;
     }
   }

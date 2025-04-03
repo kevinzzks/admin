@@ -1,4 +1,5 @@
 import axios from "axios";
+import Cookies from "js-cookie"; 
 // import store from "../store/index.js"
 const http = axios.create({
   timeout: 1000 * 30,
@@ -13,6 +14,14 @@ const http = axios.create({
  */
 http.interceptors.request.use(
   (config) => {
+    if (!config.headers['Authorization']) {
+      // 从 Cookie 中获取 Token
+      const token = Cookies.get('access_token');
+      if (token) {
+        // 如果 Cookie 中存在 Token，设置到请求头
+        config.headers['Authorization'] = `Bearer ${token}`;
+      }
+    }
    return config;
   },
   (error) => {

@@ -8,6 +8,8 @@ module.exports = defineConfig({
   devServer: {
     host: '0.0.0.0', // 允许所有IP访问
     port: 8080, // 默认端口，可以根据需要修改
+    // https: true, // 是否启用https
+    open: true, // 启动后自动打开浏览器
     proxy: {
       '/proxyApi': {
         target: 'https://10.96.177.104:8443/',

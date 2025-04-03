@@ -1,0 +1,118 @@
+<!-- Dom模板 -->
+<template>
+  <div>
+    <!-- Dom内容 -->
+    <a-layout class="login-layout" style="height: 100vh; background: #fff">
+      <a-layout-header class="header" style="background: #fff; padding: 0">
+        <div class="logo" />
+        <a-menu
+          mode="horizontal"
+          default-selected-keys="['1']"
+          theme="light"
+          style="line-height: 64px"
+        >
+          <a-menu-item key="1">登录</a-menu-item>
+        </a-menu>
+      </a-layout-header>
+      <a-layout-content style="padding: 24px; background: #fff; min-height: 280px">
+        <div class="login-form" style="width: 300px; margin: 0 auto; padding-top: 50px">
+          <a-form
+            :model="formState"
+            name="basic"
+            :label-col="{ span: 8 }"
+            :wrapper-col="{ span: 16 }"
+            autocomplete="off"
+            @finish="onFinish"
+            @finishFailed="onFinishFailed"
+          >
+            <a-form-item
+              label="Username"
+              name="username"
+              :rules="[{ required: true, message: 'Please input your username!' }]"
+            >
+              <a-input v-model:value="formState.username" />
+            </a-form-item>
+
+            <a-form-item
+              label="Password"
+              name="password"
+              :rules="[{ required: true, message: 'Please input your password!' }]"
+            >
+              <a-input-password v-model:value="formState.password" />
+            </a-form-item>
+
+            <!-- <a-form-item name="remember" :wrapper-col="{ offset: 8, span: 16 }">
+              <a-checkbox v-model:checked="formState.remember">Remember me</a-checkbox>
+            </a-form-item>-->
+
+            <a-form-item :wrapper-col="{ offset: 8, span: 16 }">
+              <a-button type="primary" html-type="submit">Submit</a-button>
+            </a-form-item>
+          </a-form>
+        </div>
+      </a-layout-content>
+    </a-layout>
+  </div>
+</template>
+
+<script>
+// import  from ''; // 引入组件
+import api from '@/api/index.js';
+export default {
+  name: 'LoGin',
+  components: {},
+  data() {
+    return {
+      formState: {
+        username: 'admin',
+        password: '0',
+      }
+    }
+  },
+  // 生命周期 - 创建完成（访问当前this实例）
+  created() {
+    this.$store.commit('login/setClient', this.$route.query);
+    window.global = this;
+  },
+  // 生命周期 - 挂载完成（访问DOM元素）
+  mounted() { },
+  computed: {},
+  // Vue方法定义
+  methods: {
+    onFinish(values) {
+      api.getToken(values,'password').then(res => {
+        this.$store.commit('login/setClient', { ...this.$store.state.login.client, ...res.data });
+        if (res.status == 200) {
+          // 设置 Axios 的全局请求头
+          let {access_token,refresh_token} = res.data;
+          this.setAuthorizationHeader(access_token);
+          this.setCookie('access_token', access_token, 1); // 设置 Cookie，有效期为 1 天
+          this.setCookie('refresh_token', refresh_token, 1)
+          this.$message.success('登录成功！')
+          this.$router.push({ path: '/home' })
+        } else {
+          this.$message.error('登录失败！')
+        }
+      }).catch(err => {
+        this.$message.error(err)
+      })
+    },
+    onFinishFailed(errorInfo) {
+      console.log('Failed:', errorInfo)
+    },
+    setAuthorizationHeader(token) {
+      this.$http.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    },
+    setCookie(name, value, days) {
+      const date = new Date();
+      date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000)); // 设置过期时间
+      const expires = "expires=" + date.toUTCString();
+      document.cookie = `${name}=${value}; ${expires}; path=/; Secure;`;
+    },
+  }
+}
+</script>
+
+<style scoped>
+/*@import url(''); 引入css类*/
+</style>
