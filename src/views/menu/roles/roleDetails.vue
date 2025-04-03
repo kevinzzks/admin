@@ -39,11 +39,6 @@ const formState = reactive({
 });
 const rules = {
   name: [
-    {
-      required: true,
-      message: 'Required field',
-      trigger: 'change',
-    },
   ]
 };
 // 
