@@ -1,8 +1,8 @@
 import http from '@/utils/request'
 import store from "@/store/index.js"
-let realm = store.state.login.realm;
 // 查询roles角色
 async function getRealmRoles(data) {
+    let realm = store.state.login.realm;
     let pushDate = {
         "first": data.first,
         "max": data.max,
@@ -15,8 +15,9 @@ async function getRealmRoles(data) {
         withCredentials: true
     })
 }
-// 查询roles角色
+// 创建roles角色
 async function createRealmRoles(data) {
+    let realm = store.state.login.realm;
     let pushDate = {
         attributes: {},
         name: data.name,
@@ -31,6 +32,7 @@ async function createRealmRoles(data) {
 }
 // 删除roles角色
 async function deleteRealmRoles(data) {
+    let realm = store.state.login.realm;
     return await http({
         method: "DELETE",
         url: http.adornUrl(`/admin/realms/${realm}/roles-by-id/${data.key}`),

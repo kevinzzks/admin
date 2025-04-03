@@ -72,7 +72,6 @@ export default {
   // 生命周期 - 创建完成（访问当前this实例）
   created() {
     this.$store.commit('login/setClient', this.$route.query);
-    window.global = this;
   },
   // 生命周期 - 挂载完成（访问DOM元素）
   mounted() { },
@@ -85,9 +84,8 @@ export default {
         if (res.status == 200) {
           // 设置 Axios 的全局请求头
           let {access_token,refresh_token} = res.data;
-          this.setAuthorizationHeader(access_token);
-          this.setCookie('access_token', access_token, 1); // 设置 Cookie，有效期为 1 天
-          this.setCookie('refresh_token', refresh_token, 1)
+          this.$Cookies.set('access_token', access_token, 1); // 设置 Cookie，有效期为 1 天
+          this.$Cookies.set('refresh_token', refresh_token, 1)
           this.$message.success('登录成功！')
           this.$router.push({ path: '/home' })
         } else {
@@ -99,15 +97,6 @@ export default {
     },
     onFinishFailed(errorInfo) {
       console.log('Failed:', errorInfo)
-    },
-    setAuthorizationHeader(token) {
-      this.$http.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-    },
-    setCookie(name, value, days) {
-      const date = new Date();
-      date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000)); // 设置过期时间
-      const expires = "expires=" + date.toUTCString();
-      document.cookie = `${name}=${value}; ${expires}; path=/; Secure;`;
     },
   }
 }

@@ -1,3 +1,5 @@
+import api from '@/api/index.js'
+import Cookies from 'js-cookie'
 export default {
     namespaced: true,
     state: {
@@ -19,7 +21,17 @@ export default {
     actions: {
       updateExampleStateA({ commit }, payload) {
         commit('setExampleStateA', payload);
-      }
+      },
+      async getToken() {
+        const token = Cookies.get('refresh_token')
+        if (token) {
+          let res = await api.getToken({ token }, 'token')
+          if (res.status === 200) {
+            Cookies.set('access_token', res.data.access_token, { expires: 1 })
+            Cookies.set('refresh_token', res.data.refresh_token, { expires: 1 })
+          }
+        }
+      },
     },
     getters: {
       exampleStateA: (state) => state.exampleStateA

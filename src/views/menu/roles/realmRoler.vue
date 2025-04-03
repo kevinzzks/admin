@@ -16,7 +16,7 @@
     <a-table :columns="columns" :pagination="false" :data-source="sourceData" :scroll="{ y: 340 }">
       <template #bodyCell="{ column, text, record }">
         <template v-if="column.dataIndex === 'name'">
-          <a>{{ text }}</a>
+          <a @click="goDetails(record)">{{ text }}</a>
           <a-tooltip class="tooltip-defaultRole">
             <template #title>defaultRole</template>
             <QuestionCircleOutlined v-if="text=='default-roles-master'" />
@@ -118,7 +118,6 @@ export default {
   },
   // 生命周期 - 创建完成（访问当前this实例）
   created() {
-    window.global = this;
     this.getRealmRoles({ first: 0, max: 11 },'reset' , false); // 获取数据
   },
 
@@ -133,7 +132,7 @@ export default {
   methods: {
     async getRealmRoles(data = {}, type = 'add', token = true) {
       if (token) {
-        await this.getToken();
+        await this.$store.dispatch('login/getToken', {})
       }
 
       api.getRealmRoles(data).then(res => {
@@ -170,16 +169,8 @@ export default {
         this.$message.error(err)
       })
     },
-    async getToken() {
-      const token = this.$Cookies.get('refresh_token')
-      if (token) {
-        await api.getToken({ token }, 'token')
-      } else {
-        this.$router.push('/login')
-      }
-    },
+    // 处理删除操作
     onDelete(key) {
-      // 删除操作
       api.deleteRealmRoles({ key }).then(res => {
         if (res.status === 204) {
           this.$message.success('删除成功！')
@@ -218,7 +209,9 @@ export default {
       let data = { first: (this.pagination.current - 1) * this.pagination.pageSize, max: this.pagination.pageSize + 1 };
       this.getRealmRoles(data, 'add', true); // 获取数据
     },
-
+    goDetails(record) {
+      this.$router.push({ path: '/home/roles/details', query: { id: record.id } })
+    },
   }
 }
 </script>

@@ -61,8 +61,8 @@ const routes = [
 ];
 
 const onSubmit = () => {
-  console.log(api);
-  formRef.value.validate().then(() => {
+  formRef.value.validate().then(async () => {
+    await this.$store.dispatch('login/getToken', {})
     api.createRealmRoles(formState).then((res) => {
       console.log(res);
       if (res.status === 201) {
@@ -88,6 +88,7 @@ const navigateTo = (path) => {
 const CancelForm = () => {
   router.push('/home/roles');
 };
+
 </script>
 
 <style scoped lang="scss">

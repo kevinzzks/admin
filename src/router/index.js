@@ -22,7 +22,8 @@ const routes = [
           title: 'Realm roles',
           icon: h(UserOutlined),
           pathname: '/home/roles',
-          keepAlive: true
+          keepAlive: true,
+          type: 'Manage'
         },
         children: [
           {
@@ -34,6 +35,15 @@ const routes = [
               keepAlive: false
             },
           },
+          {
+            path: 'details',
+            name: 'DetailsRealmRole',
+            component: () => import('@/views/menu/roles/createRealmRole.vue'),
+            meta: {
+              pathname: '/home/roles/details',
+              keepAlive: false
+            },
+          },
         ]
       },
       {
@@ -41,10 +51,11 @@ const routes = [
         name: 'Menu2',
         component: () => import('@/views/menu/Menu2.vue'),
         meta: {
-          title: '系统管理',
+          title: 'Clients',
           icon: h(NotificationOutlined),
           pathname: '/home/menu2',
-          keepAlive: true
+          keepAlive: true,
+          type: 'Manage'
         },
       },
       {
@@ -52,12 +63,26 @@ const routes = [
         name: 'Menu3',
         component: () => import('@/views/menu/Menu3.vue'),
         meta: {
-          title: '权限管理',
+          title: 'Client scopes',
           icon: h(LaptopOutlined),
           pathname: '/home/menu3',
-          keepAlive: true
+          keepAlive: true,
+          type: 'Manage'
         },
       },
+      {
+        path: 'realm-settings',
+        name: 'RealmSettings',
+        component: () => import('@/views/menu/RealmSettings.vue'),
+        meta: {
+          title: 'Realm settings',
+          icon: h(LaptopOutlined),
+          pathname: '/home/realm-settings',
+          keepAlive: true,
+          type: 'Configure'
+        },
+      },
+      
     ]
   },
   {

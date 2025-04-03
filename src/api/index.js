@@ -1,8 +1,10 @@
 
 import login from './login' 
-import realm from './roles'
+import roles from './roles'
+import realm from './realm'
 
 export default {
     ...login,
+    ...roles,
     ...realm,
 } 
