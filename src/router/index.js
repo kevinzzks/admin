@@ -38,7 +38,7 @@ const routes = [
           {
             path: 'details',
             name: 'DetailsRealmRole',
-            component: () => import('@/views/menu/roles/createRealmRole.vue'),
+            component: () => import('@/views/menu/roles/roleDetails.vue'),
             meta: {
               pathname: '/home/roles/details',
               keepAlive: false

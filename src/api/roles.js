@@ -40,6 +40,16 @@ async function deleteRealmRoles(data) {
         withCredentials: true
     })
 }
+// 获取单个roles角色 /roles-by-id/67e4c006-25e9-4074-b685-9899a566d7ee
+async function getRealmRole(data) {
+    let realm = store.state.login.realm;
+    return await http({
+        method: "get",
+        url: http.adornUrl(`/admin/realms/${realm}/roles-by-id/${data.key}`),
+        data: {},
+        withCredentials: true
+    })
+}
 export default {
-    getRealmRoles,createRealmRoles,deleteRealmRoles
+    getRealmRoles,createRealmRoles,deleteRealmRoles,getRealmRole
 } 
