@@ -25,8 +25,10 @@ export default {
       async getToken() {
         const token = Cookies.get('refresh_token')
         if (token) {
-          let res = await api.getToken({ token }, 'token')
-          if (res.status === 200) {
+          let res = await api.getToken({ token }, 'token').then().catch((err) => {
+            console.log(err)
+          })
+          if (res && res.status === 200) {
             Cookies.set('access_token', res.data.access_token, { expires: 1 })
             Cookies.set('refresh_token', res.data.refresh_token, { expires: 1 })
           }

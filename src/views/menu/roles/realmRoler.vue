@@ -23,9 +23,7 @@
           </a-tooltip>
         </template>
         <template v-else-if="column.dataIndex === 'operation'">
-          <a-popconfirm v-if="data.length" title="Sure to delete?" @confirm="onDelete(record.key)">
-            <a>Delete</a>
-          </a-popconfirm>
+          <a @click="onOpen(record.key)">Delete</a>
         </template>
       </template>
 
@@ -68,6 +66,13 @@
       </template>
       <!-- <template #footer>Footer</template> -->
     </a-table>
+    <a-modal centered v-model:open="open" title="Delete role?">
+      <p>This action will permanently delete the role "admin" and cannot be undone.</p>
+      <template #footer>
+        <a-button key="back" type="text" @click="handleCancel">Cancel</a-button>
+        <a-button key="submit" danger type="primary" @click="handleOk">Delete</a-button>
+      </template>
+    </a-modal>
   </div>
 </template>
 
@@ -113,12 +118,13 @@ export default {
         current: 1,
       },
       searchValue: '', // 搜索框的值
-
+      open: false, // 删除弹窗的状态
+      delId: '', // 删除的角色ID
     }
   },
   // 生命周期 - 创建完成（访问当前this实例）
   created() {
-    this.getRealmRoles({ first: 0, max: 11 },'reset' , false); // 获取数据
+    this.getRealmRoles({ first: 0, max: 11 },'reset' , true); // 获取数据
   },
 
   // 生命周期 - 挂载完成（访问DOM元素）
@@ -150,10 +156,12 @@ export default {
             if (type === 'reset') {
               this.data = newData;
             } else {
-              this.data = [
-                ...this.data,
-                ...newData.filter(newItem => !this.data.some(existingItem => existingItem.id === newItem.id)),
-              ];
+              this.data = this.data.map(existingItem => {
+                const newItem = newData.find(newItem => newItem.id === existingItem.id);
+                return newItem ? newItem : existingItem;
+              }).concat(
+                newData.filter(newItem => !this.data.some(existingItem => existingItem.id === newItem.id))
+              );
             }
 
             this.$message.success('访问成功！')
@@ -170,12 +178,12 @@ export default {
       })
     },
     // 处理删除操作
-    onDelete(key) {
-      api.deleteRealmRoles({ key }).then(res => {
+    onDelete(id) {
+      api.deleteRealmRoles({ id }).then(res => {
         if (res.status === 204) {
           this.$message.success('删除成功！')
           let data = { first: (this.pagination.current - 1) * this.pagination.pageSize, max: this.pagination.pageSize + 1 };
-          this.data = this.data.filter(item => item.key !== key); // 更新本地数据
+          this.data = this.data.filter(item => item.key !== id); // 更新本地数据
           this.getRealmRoles(data,'add',true); // 刷新数据
         } else {
           this.$message.error('删除失败！')
@@ -200,17 +208,33 @@ export default {
       let data = { first: 0, max: 11 }
       this.getRealmRoles(data, 'reset', true); // 获取数据
     },
+    // 处理创建操作
     onCreateRule() {
       this.$router.push('/home/roles/new')
     },
+    // 处理分页操作
     onPagination(current, pageSize) {
       this.pagination.current = current
       this.pagination.pageSize = pageSize
       let data = { first: (this.pagination.current - 1) * this.pagination.pageSize, max: this.pagination.pageSize + 1 };
       this.getRealmRoles(data, 'add', true); // 获取数据
     },
+    // 处理跳转到详情页操作
     goDetails(record) {
       this.$router.push({ path: '/home/roles/details', query: { id: record.id } })
+    },
+
+    onOpen(e) {
+      this.open = true;
+      this.delId = e; // 获取要删除的角色ID
+    },
+    
+    handleCancel() {
+      this.open = false;
+    },
+    handleOk() {
+      this.onDelete(this.delId)
+
     },
   }
 }

@@ -22,14 +22,13 @@ const routes = [
           title: 'Realm roles',
           icon: h(UserOutlined),
           pathname: '/home/roles',
-          keepAlive: true,
           type: 'Manage'
         },
         children: [
           {
             path: 'new',
             name: 'CreateRealmRole',
-            component: () => import('@/views/menu/roles/createRealmRole.vue'),
+            component: () => import('@/views/menu/roles/roleCreate.vue'),
             meta: {
               pathname: '/home/roles/new',
               keepAlive: false
@@ -40,8 +39,44 @@ const routes = [
             name: 'DetailsRealmRole',
             component: () => import('@/views/menu/roles/roleDetails.vue'),
             meta: {
-              pathname: '/home/roles/details',
-              keepAlive: false
+              title: 'Details',
+              keepAlive: true
+            },
+          },
+          {
+            path: 'associated-roles',
+            name: 'AssociatedRealmRole',
+            component: () => import('@/views/menu/roles/roleAssociated.vue'),
+            meta: {
+              title: 'Associated roles',
+              keepAlive: true
+            },
+          },
+          {
+            path: 'attributes',
+            name: 'Attributes',
+            component: () => import('@/views/menu/roles/roleDetails.vue'),
+            meta: {
+              title: 'Attributes',
+              keepAlive: true
+            },
+          },
+          {
+            path: 'users-in-role',
+            name: 'UsersInRole',
+            component: () => import('@/views/menu/roles/roleDetails.vue'),
+            meta: {
+              title: 'Users in role',
+              keepAlive: true
+            },
+          },
+          {
+            path: 'events',
+            name: 'RoleEvents',
+            component: () => import('@/views/menu/roles/roleDetails.vue'),
+            meta: {
+              title: 'Admin events',
+              keepAlive: true
             },
           },
         ]
@@ -54,7 +89,6 @@ const routes = [
           title: 'Clients',
           icon: h(NotificationOutlined),
           pathname: '/home/menu2',
-          keepAlive: true,
           type: 'Manage'
         },
       },
@@ -66,7 +100,6 @@ const routes = [
           title: 'Client scopes',
           icon: h(LaptopOutlined),
           pathname: '/home/menu3',
-          keepAlive: true,
           type: 'Manage'
         },
       },
@@ -78,7 +111,6 @@ const routes = [
           title: 'Realm settings',
           icon: h(LaptopOutlined),
           pathname: '/home/realm-settings',
-          keepAlive: true,
           type: 'Configure'
         },
       },

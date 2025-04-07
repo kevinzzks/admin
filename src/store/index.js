@@ -1,11 +1,11 @@
 import { createStore } from 'vuex';
 import login from './modules/login';
-import moduleB from './modules/moduleB';
+import home from './modules/home';
 
 const store = createStore({
   modules: {
     login,
-    moduleB
+    home
   }
 });
 

@@ -35,21 +35,39 @@ async function deleteRealmRoles(data) {
     let realm = store.state.login.realm;
     return await http({
         method: "DELETE",
-        url: http.adornUrl(`/admin/realms/${realm}/roles-by-id/${data.key}`),
+        url: http.adornUrl(`/admin/realms/${realm}/roles-by-id/${data.id}`),
         data: {},
         withCredentials: true
     })
 }
 // 获取单个roles角色 /roles-by-id/67e4c006-25e9-4074-b685-9899a566d7ee
-async function getRealmRole(data) {
+async function getRealmRole(data,type) {
     let realm = store.state.login.realm;
+    let str = "";
+    if(type == "id"){
+       str = http.adornUrl(`/admin/realms/${realm}/roles-by-id/${data.id}`);
+    }else if(type == "name"){
+       str = http.adornUrl(`/admin/realms/${realm}/roles/${data.name}`);
+    }
+    
     return await http({
         method: "get",
-        url: http.adornUrl(`/admin/realms/${realm}/roles-by-id/${data.key}`),
+        url: str,
         data: {},
         withCredentials: true
     })
 }
+// updateRealmRole admin/realms/master/roles/ff
+async function updateRealmRole(data) {
+    let realm = store.state.login.realm;
+    let str = http.adornUrl(`/admin/realms/${realm}/roles-by-id/${data.id}`)
+    return await http({
+        method: "put",
+        url: str,
+        data: data,
+        withCredentials: true
+    })
+}
 export default {
-    getRealmRoles,createRealmRoles,deleteRealmRoles,getRealmRole
+    getRealmRoles,createRealmRoles,deleteRealmRoles,getRealmRole,updateRealmRole
 } 

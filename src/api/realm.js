@@ -19,5 +19,4 @@ let realm = store.state.login.realm;
 
 export default {
     getRealmList,
-    // createRealmRoles, deleteRealmRoles
 } 

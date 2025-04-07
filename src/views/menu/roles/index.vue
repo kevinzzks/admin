@@ -1,14 +1,15 @@
 <!-- Dom模板 -->
 <template>
-  <RealmRuler v-if="this.$route.name == 'Roles'" />
-  <router-view v-else />
+    <RealmRuler v-if="this.$route.name == 'Roles'" />
+    <RoleChildren v-else />
 </template>
   
   <script>
-import RealmRuler from './realmRoler.vue'; // 引入组件
+  import RealmRuler from './realmRoler.vue'; // 引入组件
+  import RoleChildren from './children.vue';
 export default {
   name: 'LoGin',
-  components: { RealmRuler },
+  components: { RealmRuler,RoleChildren, },
   // inheritAttrs: false,
   // props: ['mess'],
   data() {

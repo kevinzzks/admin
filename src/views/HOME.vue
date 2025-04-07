@@ -22,7 +22,10 @@
         </div>
         <div class="user-info">
           <a-dropdown placement="bottom" :arrow="{ pointAtCenter: true }">
-            <a-button>admin</a-button>
+            <a-button>
+              admin
+              <DownOutlined />
+            </a-button>
             <template #overlay>
               <a-menu>
                 <a-menu-item>
@@ -69,7 +72,7 @@
             </div>
             <template #overlay>
               <a-menu class="realmList-spac">
-                <a-menu-item  v-for="item in realmList" :key="item.name" @click="onRealm(item)">
+                <a-menu-item v-for="item in realmList" :key="item.name" @click="onRealm(item)">
                   <a href="javascript:;">{{item.displayName}}</a>
                   <a href="javascript:;">{{item.name}}</a>
                 </a-menu-item>
@@ -148,7 +151,7 @@ export default {
       realm: {
         name: 'master',
         displayName: 'Keycloak',
-      }
+      },
     }
   },
   // 生命周期 - 创建完成（访问当前this实例）
@@ -179,7 +182,7 @@ export default {
       message.info(`You selected ${item.key}`);
     },
     onRealm(e) {
-      this.realm=e;
+      this.realm = e;
       this.$store.commit('login/setRealm', e.name);
     },
     goCreateRealm() {
@@ -232,7 +235,7 @@ export default {
         console.error('Error fetching realm list', error);
         message.error('Failed to fetch realm list!');
       });
-    }
+    },
   }
 }
 
@@ -299,17 +302,16 @@ export default {
     }
   }
 }
-.realmList-spac{
-  ::v-deep li{
+.realmList-spac {
+  ::v-deep li {
     border-bottom: 1px solid #f0f0f0;
     height: 50px;
-    .ant-dropdown-menu-title-content{
+    .ant-dropdown-menu-title-content {
       display: flex;
       flex-direction: column;
       line-height: 1em; // 设置行高
     }
   }
- 
 }
 .ant-layout-header {
   display: flex;
