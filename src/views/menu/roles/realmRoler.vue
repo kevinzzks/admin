@@ -181,7 +181,8 @@ export default {
     onDelete(id) {
       api.deleteRealmRoles({ id }).then(res => {
         if (res.status === 204) {
-          this.$message.success('删除成功！')
+          this.$message.success('删除成功！');
+          this.open = false; // 关闭加载状态
           let data = { first: (this.pagination.current - 1) * this.pagination.pageSize, max: this.pagination.pageSize + 1 };
           this.data = this.data.filter(item => item.key !== id); // 更新本地数据
           this.getRealmRoles(data,'add',true); // 刷新数据

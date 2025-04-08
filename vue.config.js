@@ -1,5 +1,8 @@
 const { defineConfig } = require('@vue/cli-service');
+// const fs = require('fs');
+// const path = require('path');
 const { createProxyMiddleware } = require('http-proxy-middleware');
+
 module.exports = defineConfig({
   transpileDependencies: ['@vue/cli-service'],
   outputDir: 'dist', // 指定输出目录
@@ -45,6 +48,17 @@ module.exports = defineConfig({
         }
         return options;
       });
+  },
+  configureWebpack: (config) => {
+    // 使用时间戳生成版本号
+    const version = `1.0.1.${Date.now()}`;
+
+    // 将版本号注入到全局变量
+    config.plugins.push(
+      new (require('webpack')).DefinePlugin({
+        APP_VERSION: JSON.stringify(version),
+      })
+    );
   },
   // css: {
   //   loaderOptions: {
