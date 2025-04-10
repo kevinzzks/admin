@@ -2,8 +2,7 @@
 <template>
     <div>
       <!-- Dom内容 -->
-      Nav1
-      <router-view />
+      Client registration
     </div>
   </template>
   
@@ -11,7 +10,7 @@
   // import  from ''; // 引入组件
   // import  from '';
   export default {
-    name: 'LoGin',
+    name: 'ClientRegistration',
     components: {},
     // inheritAttrs: false,
     // props: ['mess'],
@@ -31,4 +30,3 @@
   <style scoped>
   /*@import url(''); 引入css类*/
   </style>
-

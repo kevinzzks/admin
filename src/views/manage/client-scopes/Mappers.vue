@@ -8,7 +8,7 @@
 <script>
 // import api from '@/api/index.js';
 export default {
-  name: 'LoGin',
+  name: 'MAPPER',
   components: {},
   // inheritAttrs: false,
   // props: ['mess'],
@@ -31,7 +31,7 @@ export default {
   },
   // 生命周期 - 创建完成（访问当前this实例）
   created() {
-    let itemList = this.$router.options.routes[1].children[0].children
+    let itemList = this.$router.options.routes[1].children[2].children
     itemList.forEach(item => {
       const menuItem = {
         key: item.name,

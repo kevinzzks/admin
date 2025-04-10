@@ -1,6 +1,12 @@
 import { createRouter, createWebHistory } from 'vue-router';
-// import { UserOutlined, LaptopOutlined } from '@ant-design/icons-vue';
-import { UserOutlined, LaptopOutlined, NotificationOutlined } from '@ant-design/icons-vue';
+import roles from './modules/roles.js';
+import clients from './modules/clients.js';
+import {
+  UsergroupAddOutlined,TrademarkCircleOutlined,
+  ProfileOutlined, SettingOutlined, WalletOutlined,
+  UserAddOutlined, UserSwitchOutlined, UngroupOutlined,
+  FundProjectionScreenOutlined,FireOutlined,FileSyncOutlined,
+} from '@ant-design/icons-vue';
 import { h } from 'vue';
 const routes = [
   {
@@ -12,109 +18,161 @@ const routes = [
     path: '/home',
     name: 'Home',
     component: () => import('@/views/home.vue'),
-    redirect: '/home/roles',
+    redirect: '/home/clients',
     children: [
+      {
+        path: 'clients',
+        name: 'Clients',
+        component: () => import('@/views/manage/clients/index.vue'),
+        redirect: '/home/clients/list',
+        meta: {
+          title: 'Clients',
+          icon: h(ProfileOutlined),
+          pathname: '/home/clients',
+          type: 'Manage',
+        },
+        children: clients
+      },
+      {
+        path: 'client-scopes',
+        name: 'ClientScopes',
+        component: () => import('@/views/manage/client-scopes/index.vue'),
+        meta: {
+          title: 'Client scopes',
+          icon: h(FileSyncOutlined),
+          pathname: '/home/client-scopes',
+          type: 'Manage'
+        },
+      },
       {
         path: 'roles',
         name: 'Roles',
-        component: () => import('@/views/menu/roles/index.vue'),
+        component: () => import('@/views/manage/roles/index.vue'),
         meta: {
           title: 'Realm roles',
-          icon: h(UserOutlined),
+          icon: h(TrademarkCircleOutlined),
           pathname: '/home/roles',
           type: 'Manage'
         },
-        children: [
-          {
-            path: 'new',
-            name: 'CreateRealmRole',
-            component: () => import('@/views/menu/roles/roleCreate.vue'),
-            meta: {
-              pathname: '/home/roles/new',
-              keepAlive: false
-            },
-          },
-          {
-            path: 'details',
-            name: 'DetailsRealmRole',
-            component: () => import('@/views/menu/roles/roleDetails.vue'),
-            meta: {
-              title: 'Details',
-              keepAlive: true
-            },
-          },
-          {
-            path: 'associated-roles',
-            name: 'AssociatedRealmRole',
-            component: () => import('@/views/menu/roles/roleAssociated.vue'),
-            meta: {
-              title: 'Associated roles',
-              keepAlive: true
-            },
-          },
-          {
-            path: 'attributes',
-            name: 'Attributes',
-            component: () => import('@/views/menu/roles/roleDetails.vue'),
-            meta: {
-              title: 'Attributes',
-              keepAlive: true
-            },
-          },
-          {
-            path: 'users-in-role',
-            name: 'UsersInRole',
-            component: () => import('@/views/menu/roles/roleDetails.vue'),
-            meta: {
-              title: 'Users in role',
-              keepAlive: true
-            },
-          },
-          {
-            path: 'events',
-            name: 'RoleEvents',
-            component: () => import('@/views/menu/roles/roleDetails.vue'),
-            meta: {
-              title: 'Admin events',
-              keepAlive: true
-            },
-          },
-        ]
+        children: roles
       },
       {
-        path: 'menu2',
-        name: 'Menu2',
-        component: () => import('@/views/menu/Menu2.vue'),
+        path: 'users',
+        name: 'Users',
+        component: () => import('@/views/manage/users/index.vue'),
         meta: {
-          title: 'Clients',
-          icon: h(NotificationOutlined),
-          pathname: '/home/menu2',
+          title: 'Users',
+          icon: h(UserAddOutlined),
+          pathname: '/home/users',
           type: 'Manage'
         },
       },
       {
-        path: 'menu3',
-        name: 'Menu3',
-        component: () => import('@/views/menu/Menu3.vue'),
+        path: 'groups',
+        name: 'Groups',
+        component: () => import('@/views/manage/groups/Groups.vue'),
         meta: {
-          title: 'Client scopes',
-          icon: h(LaptopOutlined),
-          pathname: '/home/menu3',
+          title: 'Groups',
+          icon: h(UsergroupAddOutlined),
+          pathname: '/home/groups',
           type: 'Manage'
         },
       },
+
+      {
+        path: 'sessions',
+        name: 'Sessions',
+        component: () => import('@/views/manage/sessions/Sessions.vue'),
+        meta: {
+          title: 'Sessions',
+          icon: h(FundProjectionScreenOutlined),
+          pathname: '/home/sessions',
+          type: 'Manage'
+        },
+      },
+
+      {
+        path: 'events',
+        name: 'Events',
+        component: () => import('@/views/manage/events/index.vue'),
+        meta: {
+          title: 'Events',
+          icon: h(FireOutlined),
+          pathname: '/home/events',
+          type: 'Manage'
+        },
+      },
+
+
       {
         path: 'realm-settings',
         name: 'RealmSettings',
-        component: () => import('@/views/menu/RealmSettings.vue'),
+        component: () => import('@/views/configure/realm-settings/index.vue'),
         meta: {
           title: 'Realm settings',
-          icon: h(LaptopOutlined),
+          icon: h(SettingOutlined),
           pathname: '/home/realm-settings',
           type: 'Configure'
         },
       },
+
+    
+      {
+        path: 'authentication',
+        name: 'Authentication',
+        component: () => import('@/views/configure/identity-providers/index.vue'),
+        meta: {
+          title: 'Authentication',
+          icon: h(UngroupOutlined),
+          pathname: '/home/authentication',
+          type: 'Configure'
+        },
+      },
+
+      {
+        path: 'identity-providers',
+        name: 'IdentityProviders',
+        component: () => import('@/views/configure/identity-providers/index.vue'),
+        meta: {
+          title: 'Identity providers',
+          icon: h(WalletOutlined),
+          pathname: '/home/identity-providers',
+          type: 'Configure'
+        },
+      },
+
+      {
+        path: 'user-federation',
+        name: 'UserFederation',
+        component: () => import('@/views/configure/user-federation/UserFederation.vue'),
+        meta: {
+          title: 'User federation',
+          icon: h(UserSwitchOutlined),
+          pathname: '/home/user-federation',
+          type: 'Configure'
+        },
+      },
       
+      {
+        path: 'add-realm',
+        name: 'CreateRealm',
+        component: () => import('@/views/manage/realms/CreateRealm.vue'),
+        meta: {
+          title: 'Create realm',
+          pathname: '/home/add-realm',
+          type: 'realm'
+        },
+      },
+      {
+        path: 'realm-details',
+        name: 'DetailsRealm',
+        component: () => import('@/views/manage/realms/DetailsRealm.vue'),
+        meta: {
+          title: 'Realm details',
+          pathname: '/home/realm-details',
+          type: 'realm'
+        },
+      },
     ]
   },
   {

@@ -2,7 +2,7 @@
 <template>
     <div>
       <!-- Dom内容 -->
-      Sub1
+      DetailsRealm
     </div>
   </template>
   
@@ -10,7 +10,7 @@
   // import  from ''; // 引入组件
   // import  from '';
   export default {
-    name: 'LoGin',
+    name: 'DetailsRealm',
     components: {},
     // inheritAttrs: false,
     // props: ['mess'],

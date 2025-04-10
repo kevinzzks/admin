@@ -2,7 +2,7 @@
 <template>
     <div>
       <!-- Dom内容 -->
-       Menu3
+      Create realm
     </div>
   </template>
   
@@ -10,7 +10,7 @@
   // import  from ''; // 引入组件
   // import  from '';
   export default {
-    name: 'LoGin',
+    name: 'CreateRealm',
     components: {},
     // inheritAttrs: false,
     // props: ['mess'],
@@ -30,4 +30,3 @@
   <style scoped>
   /*@import url(''); 引入css类*/
   </style>
-

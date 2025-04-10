@@ -4,15 +4,15 @@ import store from "@/store/index.js"
 async function getRealmList() {
     
 let realm = store.state.login.realm;
-    // let pushDate = {
-    //     "first": data.first,
-    //     "max": data.max,
-    //     "search": data.search,
-    // }
+    let pushDate = {
+        "first": 0,
+        "max": 11,
+        "search": '',
+    }
     return await http({
         method: "get",
-        url: http.adornUrl(`/admin/realms/${realm}/ui-ext/realms/names?first=0&max=11&search=`),
-        params: {},
+        url: http.adornUrl(`/admin/realms/${realm}/ui-ext/realms/names`),
+        params: pushDate,
         withCredentials: true
     })
 }

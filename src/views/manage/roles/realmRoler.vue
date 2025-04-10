@@ -23,7 +23,12 @@
           </a-tooltip>
         </template>
         <template v-else-if="column.dataIndex === 'operation'">
-          <a @click="onOpen(record.key)">Delete</a>
+          <a-popover placement="bottomRight" trigger="click">
+            <template #content>
+              <a @click="onOpen(record.key)">Delete</a>
+            </template>
+            <MoreOutlined />
+          </a-popover>
         </template>
       </template>
 
@@ -44,7 +49,7 @@
               </template>
             </a-input-search>
           </a-space>
-          <a-space class="create-role-button">
+          <a-space class="create-button">
             <a-button type="primary" size="large" @click="onCreateRule">Create role</a-button>
           </a-space>
           <a-space>
@@ -79,12 +84,12 @@
 <script>
 import api from '@/api/index.js';
 import {
-  ExportOutlined, QuestionCircleOutlined, ArrowRightOutlined, SyncOutlined,
+  ExportOutlined, QuestionCircleOutlined, ArrowRightOutlined, SyncOutlined,MoreOutlined
 } from '@ant-design/icons-vue';
 export default {
   name: 'realmRoles',
   components: {
-    ExportOutlined, QuestionCircleOutlined, ArrowRightOutlined, SyncOutlined,
+    ExportOutlined, QuestionCircleOutlined, ArrowRightOutlined, SyncOutlined,MoreOutlined
   },
   data() {
     return {
@@ -229,36 +234,18 @@ export default {
       this.open = true;
       this.delId = e; // 获取要删除的角色ID
     },
+    handleOk() {
+      this.onDelete(this.delId)
+    },
     
     handleCancel() {
       this.open = false;
     },
-    handleOk() {
-      this.onDelete(this.delId)
 
-    },
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.realm-roles {
-  ::v-deep .ant-table-title {
-    display: flex;
-    justify-content: space-between;
-    .table-title-left {
-      display: flex;
-    }
-  }
-  .tooltip-defaultRole {
-    margin-left: 10px;
-  }
-  .create-role-button {
-    margin: 0 10px;
-  }
 
-  // .tooltip{
-  //   background: #fff;
-  // }
-}
 </style>

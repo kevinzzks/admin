@@ -8,8 +8,10 @@ import http from './utils/request';
 import Cookies from "js-cookie"; 
 const app = createApp(App);
 
-app.config.globalProperties.$http = http;
-app.config.globalProperties.$baseUrl = location.origin;
+app.config.globalProperties.$http = http;// 将 http 请求方法添加到全局属性中
+app.config.globalProperties.$baseUrl = location.origin; // 设置基础 URL
+app.config.globalProperties.$reqUrl = 'https://10.96.177.104:8443'; // 设置请求的基础 URL
+
 app.config.globalProperties.$message = Antd.message; // 将 Ant Design 的 message 方法添加到全局属性中
 app.config.globalProperties.$Cookies = Cookies; // 将 Cookies 添加到全局属性中
 

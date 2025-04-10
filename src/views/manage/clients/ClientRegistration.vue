@@ -2,7 +2,7 @@
 <template>
     <div>
       <!-- Dom内容 -->
-       Menu2
+      Client registration
     </div>
   </template>
   
@@ -10,7 +10,7 @@
   // import  from ''; // 引入组件
   // import  from '';
   export default {
-    name: 'LoGin',
+    name: 'ClientRegistration',
     components: {},
     // inheritAttrs: false,
     // props: ['mess'],

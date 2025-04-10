@@ -2,7 +2,7 @@
 <template>
     <div>
       <!-- Dom内容 -->
-      Sub5
+      Groups
     </div>
   </template>
   
@@ -10,7 +10,7 @@
   // import  from ''; // 引入组件
   // import  from '';
   export default {
-    name: 'LoGin',
+    name: 'GroupS',
     components: {},
     // inheritAttrs: false,
     // props: ['mess'],

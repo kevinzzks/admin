@@ -87,7 +87,7 @@
             :theme="state.theme"
             :selectedKeys="[defaultKey]"
             v-model:openKeys="state.openKeys"
-            style="height: 30%"
+            style="height: 40%"
             @click="onClickMenuItem"
           >
             <template v-for="item in manageList" :key="item.key">
@@ -168,6 +168,12 @@ export default {
       if (pathKey.indexOf('home/roles') !== -1) {
         return '/home/roles';
       }
+      if (pathKey.indexOf('home/clients') !== -1) {
+        return '/home/clients';
+      }
+      if (pathKey.indexOf('home/users') !== -1) {
+        return '/home/users';
+      }
       return pathKey;
     },
   },
@@ -219,7 +225,7 @@ export default {
         // 根据 type 判断加入哪个列表
         if (item.meta.type === 'Manage') {
           this.manageList.push(menuItem);
-        } else {
+        } else  if (item.meta.type === 'Configure') {
           this.configList.push(menuItem);
         }
       });
