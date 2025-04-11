@@ -1,7 +1,19 @@
 <!-- Dom模板 -->
 <template>
   <div>
-    <div class="custom-page-header">
+    <div class="custom-page-header"  v-if="$route.name == 'ClientScopes'">
+      <h2 class="page-title">Client scopes</h2>
+      <p class="page-description">
+        Client scopes are a common set of protocol mappers and roles that are shared between multiple clients.
+        <a
+          href="https://www.keycloak.org/docs/latest/server_admin/index.html#_client_scopes"
+        >
+          Learn more
+          <ExportOutlined />
+        </a>
+      </p>
+    </div>
+    <div class="custom-page-header" v-else>
       <a-breadcrumb>
         <a-breadcrumb-item v-for="(route, index) in routes" :key="index">
           <template v-if="route.path">
@@ -36,7 +48,7 @@
       </h2>
     </div>
     <a-menu
-      v-if="$route.name!=='CreateRealmRole'"
+      v-if="$route.name!=='ClientScopeCreate' && $route.name !== 'ClientScopes'"
       @click="goChildren"
       class="horizontal-header"
       v-model:selectedKeys="current"
@@ -50,18 +62,16 @@
         <a-button key="submit" danger type="primary" :loading="loading" @click="handleOk">Delete</a-button>
       </template>
     </a-modal>
-    <router-view />
   </div>
 </template>
     
-    <script>
+<script>
 import api from '@/api/index';
-import { DownOutlined } from '@ant-design/icons-vue';
+import { DownOutlined, ExportOutlined } from '@ant-design/icons-vue'; // 添加 ExportOutlined 图标
+
 export default {
-  name: 'LoGin',
-  components: { DownOutlined },
-  // inheritAttrs: false,
-  // props: ['mess'],
+  name: 'RolesHeader',
+  components: { DownOutlined, ExportOutlined }, // 注册 ExportOutlined 组件
   data() {
     return {
       routes: [
@@ -92,7 +102,7 @@ export default {
         };
         if (item.meta.keepAlive) this.items.push(menuItem);
       });
-      this.getRealmRole(); // 获取角色详情
+      
     }
 
 
@@ -104,31 +114,11 @@ export default {
   // Vue方法定义
   methods: {
     goChildren(e) {
-      this.$router.push({ name: e.key });
+      this.$router.push({ name: e.key, query: { id: this.$route.query.id } });
     },
     navigateTo(path) {
       if (path) {
         this.$router.push(path);
-      }
-    },
-
-    async getRealmRole() {
-      const id = this.$route.query.id; // 从路由参数中获取 id
-      if (id) {
-        // 调用获取角色详情的方法
-        await this.$store.dispatch('login/getToken', {});
-        api.getRealmRole({ id: id }, 'id').then((res) => {
-          if (res.status === 200) {
-            this.$store.commit('home/setRoleDetails', res.data); // 将角色详情存储到 Vuex 中
-            this.$message.success('Role details fetched successfully!');
-          } else {
-            this.$message.error('Failed to fetch role details');
-          }
-        }).catch(() => {
-          this.$message.error('Error fetching role details');
-        });
-      } else {
-        this.$message.error('No role ID found in route parameters');
       }
     },
 
@@ -159,9 +149,9 @@ export default {
     },
   }
 }
-    </script>
+</script>
     
-    <style scoped>
+<style scoped>
 /*@import url(''); 引入css类*/
 .horizontal-header {
   padding: 0;
@@ -172,5 +162,4 @@ export default {
   justify-content: space-between;
 }
 </style>
-  
-  
+

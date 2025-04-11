@@ -11,14 +11,17 @@
         <template v-else-if="column.dataIndex === 'description'">{{ text ? text : '——' }}</template>
         <template v-else-if="column.dataIndex === 'baseUrl'">
           <span v-if="!text">——</span>
-          <a v-else-if="text.length>10" :href="text">{{ text ? $reqUrl + text : '' }}</a>
+          <a v-else-if="text.length>10" :href="text">
+            {{ text ? $reqUrl + text : '' }}
+            <ExportOutlined />
+          </a>
         </template>
         <template v-else-if="column.dataIndex === 'operation'">
           <a-popover placement="bottomRight" trigger="click">
             <template #content>
-              <a-pace>
+              <a-space>
                 <a @click="onExport(record)">Export</a>
-              </a-pace>
+              </a-space>
               <br>
               <a @click="onOpen(record.key)">Delete</a>
             </template>
@@ -76,15 +79,15 @@
   </div>
 </template>
     
-    <script>
+<script>
 import api from '@/api/index.js';
 import {
-  ArrowRightOutlined, SyncOutlined,MoreOutlined
-} from '@ant-design/icons-vue'
+  ArrowRightOutlined, SyncOutlined, MoreOutlined, ExportOutlined,
+} from '@ant-design/icons-vue';
 export default {
   name: 'LoGin',
   components: {
-    ArrowRightOutlined, SyncOutlined,MoreOutlined
+    ArrowRightOutlined, SyncOutlined, MoreOutlined, ExportOutlined,
   },
   data() {
     return {
@@ -265,9 +268,9 @@ export default {
     },
   }
 }
-    </script>
+</script>
     
-    <style scoped>
+<style scoped>
 /*@import url(''); 引入css类*/
 .horizontal-header {
   padding: 0;
@@ -278,5 +281,4 @@ export default {
   justify-content: space-between;
 }
 </style>
-  
-  
+

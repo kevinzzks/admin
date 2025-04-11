@@ -1,6 +1,6 @@
 <template>
   <div class="create-roles">
-    <a-form ref="formRef" :rules="rules">
+    <a-form ref="formRef">
       <a-form-item ref="name" label="Role name" name="name">
         <a-input v-model:value="store.state.home.roleDetails.name" disabled />
       </a-form-item>

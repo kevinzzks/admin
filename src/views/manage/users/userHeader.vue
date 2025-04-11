@@ -1,7 +1,19 @@
 <!-- Dom模板 -->
 <template>
   <div>
-    <div class="custom-page-header">
+    <div class="custom-page-header" v-if="$route.name == 'Users'">
+      <h2 class="page-title">Users</h2>
+      <p class="page-description">
+        Users are the users in the current realm
+        <a
+          href="https://www.keycloak.org/docs/latest/server_admin/index.html#assembly-managing-users_server_administration_guide"
+        >
+          Learn more
+          <ExportOutlined />
+        </a>
+      </p>
+    </div>
+    <div class="custom-page-header" v-else>
       <a-breadcrumb>
         <a-breadcrumb-item v-for="(route, index) in routes" :key="index">
           <template v-if="route.path">
@@ -36,7 +48,7 @@
       </h2>
     </div>
     <a-menu
-      v-if="$route.name!=='CreateRealmRole'"
+      v-if="$route.name!=='CreateRealmRole' && $route.name !== 'Users'"
       @click="goChildren"
       class="horizontal-header"
       v-model:selectedKeys="current"
@@ -50,16 +62,16 @@
         <a-button key="submit" danger type="primary" :loading="loading" @click="handleOk">Delete</a-button>
       </template>
     </a-modal>
-    <router-view />
+    
   </div>
 </template>
     
     <script>
 import api from '@/api/index';
-import { DownOutlined } from '@ant-design/icons-vue';
+import { DownOutlined,ExportOutlined } from '@ant-design/icons-vue';
 export default {
   name: 'LoGin',
-  components: { DownOutlined },
+  components: { DownOutlined,ExportOutlined },
   // inheritAttrs: false,
   // props: ['mess'],
   data() {
@@ -104,7 +116,7 @@ export default {
   // Vue方法定义
   methods: {
     goChildren(e) {
-      this.$router.push({ name: e.key });
+      this.$router.push({ name: e.key, query: { id: this.$route.query.id } });
     },
     navigateTo(path) {
       if (path) {

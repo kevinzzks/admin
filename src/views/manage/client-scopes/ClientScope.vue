@@ -1,27 +1,25 @@
 <template>
-  <div class="realm-roles">
-    <div class="custom-page-header">
-      <h2 class="page-title">Realm roles</h2>
-      <p class="page-description">
-        Realm roles are the roles that you define for use in the current realm.
-        <a
-          href="https://www.keycloak.org/docs/latest/server_admin/index.html#assigning-permissions-using-roles-and-groups"
-        >
-          Learn more
-          <ExportOutlined />
-        </a>
-      </p>
-    </div>
-
-    <a-table :columns="columns" :pagination="false" :data-source="sourceData" :scroll="{ y: 340 }">
+  <div class="client-scopes">
+    <a-table 
+     :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
+    :columns="columns" :pagination="false" :data-source="sourceData" :scroll="{ y: 340 }">
       <template #bodyCell="{ column, text, record }">
         <template v-if="column.dataIndex === 'name'">
           <a @click="goDetails(record)">{{ text }}</a>
-          <a-tooltip class="tooltip-defaultRole">
-            <template #title>defaultRole</template>
-            <QuestionCircleOutlined v-if="text=='default-roles-master'" />
-          </a-tooltip>
         </template>
+
+        <template v-else-if="column.dataIndex === 'type'">
+          <a-select
+            :value="text"
+            style="width: 120px"
+            @change="handleChange($event, record)"
+          >
+          <a-select-option value="None">None</a-select-option>
+            <a-select-option value="Default">Default</a-select-option>
+            <a-select-option value="Optional">Optional</a-select-option>
+    </a-select>
+        </template>
+
         <template v-else-if="column.dataIndex === 'operation'">
           <a-popover placement="bottomRight" trigger="click">
             <template #content>
@@ -37,7 +35,7 @@
           <a-space direction="vertical">
             <a-input-search
               v-model:value="searchValue"
-              placeholder="Search role by name"
+              placeholder="Search for client scope"
               size="large"
               @search="onSearch"
               allowClear
@@ -84,40 +82,54 @@
 <script>
 import api from '@/api/index.js';
 import {
-  ExportOutlined, QuestionCircleOutlined, ArrowRightOutlined, SyncOutlined,MoreOutlined,
+  ArrowRightOutlined, SyncOutlined, MoreOutlined,
 } from '@ant-design/icons-vue';
 export default {
   name: 'realmRoles',
   components: {
-    ExportOutlined, QuestionCircleOutlined, ArrowRightOutlined, SyncOutlined,MoreOutlined,
+    ArrowRightOutlined, SyncOutlined, MoreOutlined,
   },
   data() {
     return {
+      selectedRowKeys: [], // 选中的行的key
       columns: [
         {
-          title: 'Role name',
+          title: 'Name',
           dataIndex: 'name',
-          width: 250,
+          width: 120,
         },
         {
-          title: 'Composite',
-          dataIndex: 'composite',
-          width: 150,
+          title: 'Assigned type',
+          dataIndex: 'type',
+          width: 120,
+        },
+        {
+          title: 'Protocol',
+          dataIndex: 'protocol',
+          width: 120,
+        },
+        {
+          title: 'Display order',
+          dataIndex: 'order',
+          width: 100,
         },
         {
           title: 'Description',
           dataIndex: 'description',
-          width: 200,
+          width: 250,
         },
         {
           title: 'operation',
           dataIndex: 'operation',
           width: 150,
           fixed: 'right',
+          align: 'right',
         },
 
       ],
       data: [],
+      optionalData: [],
+      defaultData: [],
       pagination: {
         pageSize: 10,
         current: 1,
@@ -129,7 +141,7 @@ export default {
   },
   // 生命周期 - 创建完成（访问当前this实例）
   created() {
-    this.getRealmRoles({ first: 0, max: 11 },'reset' , true); // 获取数据
+    this.getClientScopes({ first: 0, max: 11 }, 'reset', true); // 获取数据
   },
 
   // 生命周期 - 挂载完成（访问DOM元素）
@@ -141,46 +153,46 @@ export default {
   },
   // Vue方法定义
   methods: {
-    async getRealmRoles(data = {}, type = 'add', token = true) {
-      if (token) {
-        await this.$store.dispatch('login/getToken', {})
-      }
-
-      api.getRealmRoles(data).then(res => {
+    async getClientScopes() {
+      await this.$store.dispatch('login/getToken', {})
+      api.getClientScopes().then(async (res) => {
         if (res.status === 200) {
           if (res.data) {
             let newData = res.data.map(item => {
               return {
                 ...item,
                 key: item.id, // 设置唯一标识
-                description: item.description.replace(/^\$\{(.*)\}$/, '$1'), // 提取 ${} 中的内容
-                composite: item.composite ? 'True' : 'False', // 转换 composite 为字符串
+                description: item.description ? item.description : '——', // 处理description
+                order: item.attributes['gui.order'] ? item.attributes['gui.order'] : '——', // 处理order
               };
             });
-            // this.data = newData; // 只显示前 pageSize 条数据
-            if (type === 'reset') {
-              this.data = newData;
-            } else {
-              this.data = this.data.map(existingItem => {
-                const newItem = newData.find(newItem => newItem.id === existingItem.id);
-                return newItem ? newItem : existingItem;
-              }).concat(
-                newData.filter(newItem => !this.data.some(existingItem => existingItem.id === newItem.id))
-              );
-            }
 
+            let res1 = await api.getDefaultClientScopes();
+            let res2 = await api.getOptionalClientScopes();
+            this.defaultData = res1.data;
+            this.optionalData = res2.data;
+            newData.sort((a, b) => a.name.localeCompare(b.name));
+            console.log('defaultData', this.defaultData)
+            console.log('optionalData', this.optionalData)
+            newData = newData.map(item => {
+              if (this.defaultData.some(defaultItem => defaultItem.id === item.id)) {
+                return { ...item, type: 'Default' };
+              } else if (this.optionalData.some(optionalItem => optionalItem.id === item.id)) {
+                return { ...item, type: 'Optional' };
+              } else {
+                return { ...item, type: 'None' };
+              }
+            });
+            this.data = newData;
             this.$message.success('访问成功！')
-          } else {
-            this.$message.error('没有数据！')
           }
-
-        } else {
-          this.$message.error('访问失败！')
         }
       }).catch(err => {
         this.$router.push('/login')
         this.$message.error(err)
       })
+
+
     },
     // 处理删除操作
     onDelete(id) {
@@ -190,7 +202,7 @@ export default {
           this.open = false; // 关闭加载状态
           let data = { first: (this.pagination.current - 1) * this.pagination.pageSize, max: this.pagination.pageSize + 1 };
           this.data = this.data.filter(item => item.key !== id); // 更新本地数据
-          this.getRealmRoles(data,'add',true); // 刷新数据
+          this.getClientScopes(data, 'add', true); // 刷新数据
         } else {
           this.$message.error('删除失败！')
         }
@@ -200,9 +212,9 @@ export default {
     },
     // 处理搜索操作
     onSearch(searchValue) {
-      let data = { search: searchValue, first: 0, max: this.pagination.pageSize + 1 }
+      console.log('搜索功能尚未实现', searchValue)
       this.pagination.current = 1;
-      this.getRealmRoles(data, 'reset', true); // 获取数据
+
     },
     // 处理Refresh
     onRefresh() {
@@ -211,23 +223,26 @@ export default {
         pageSize: 10,
         current: 1,
       }
-      let data = { first: 0, max: 11 }
-      this.getRealmRoles(data, 'reset', true); // 获取数据
+      this.getClientScopes(); // 获取数据
     },
     // 处理创建操作
     onCreateRule() {
-      this.$router.push('/home/roles/new')
+      this.$router.push('/home/client-scopes/new')
     },
     // 处理分页操作
     onPagination(current, pageSize) {
       this.pagination.current = current
       this.pagination.pageSize = pageSize
-      let data = { first: (this.pagination.current - 1) * this.pagination.pageSize, max: this.pagination.pageSize + 1 };
-      this.getRealmRoles(data, 'add', true); // 获取数据
+      // let data = { first: (this.pagination.current - 1) * this.pagination.pageSize, max: this.pagination.pageSize + 1 };
+      // this.getClientScopes(data, 'add', true); // 获取数据
     },
     // 处理跳转到详情页操作
     goDetails(record) {
-      this.$router.push({ path: '/home/roles/details', query: { id: record.id } })
+      this.$router.push({ path: '/home/client-scopes/details', query: { id: record.id } })
+    },
+    onSelectChange(selectedRowKeys) {
+      console.log('selectedRowKeys changed: ', selectedRowKeys);
+      this.selectedRowKeys = selectedRowKeys;
     },
 
     onOpen(e) {
@@ -237,9 +252,13 @@ export default {
     handleOk() {
       this.onDelete(this.delId)
     },
-    
+
     handleCancel() {
       this.open = false;
+    },
+    handleChange(value, record) {
+      console.log('Selected value:', value);
+      console.log('Record:', record);
     },
 
   }
@@ -247,5 +266,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
 </style>

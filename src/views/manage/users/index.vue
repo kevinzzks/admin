@@ -1,15 +1,20 @@
 <!-- Dom模板 -->
 <template>
+  <div>
+    
+  <UserHeader />
   <UserBase v-if="$route.name == 'Users'" />
-  <UserChildren v-else />
+    <router-view />
+  </div>
+  
 </template>
 
 <script>
 import UserBase from './userBase.vue'; // 引入组件
-import UserChildren from './children.vue';
+import UserHeader from './userHeader.vue';
 export default {
 name: 'LoGin',
-components: { UserBase, UserChildren },
+components: { UserBase, UserHeader },
 // inheritAttrs: false,
 // props: ['mess'],
 data() {

@@ -1,18 +1,5 @@
 <template>
   <div class="users">
-    <div class="custom-page-header">
-      <h2 class="page-title">Users</h2>
-      <p class="page-description">
-        Users are the users in the current realm
-        <a
-          href="https://www.keycloak.org/docs/latest/server_admin/index.html#assembly-managing-users_server_administration_guide"
-        >
-          Learn more
-          <ExportOutlined />
-        </a>
-      </p>
-    </div>
-
     <a-table :columns="columns" :pagination="false" :data-source="sourceData" :scroll="{ y: 340 }">
       <template #bodyCell="{ column, text, record }">
         <template v-if="column.dataIndex === 'name'">
@@ -84,12 +71,12 @@
 <script>
 import api from '@/api/index.js';
 import {
-  ExportOutlined, QuestionCircleOutlined, ArrowRightOutlined, SyncOutlined,MoreOutlined,
+   QuestionCircleOutlined, ArrowRightOutlined, SyncOutlined,MoreOutlined,
 } from '@ant-design/icons-vue';
 export default {
   name: 'realmRoles',
   components: {
-    ExportOutlined, QuestionCircleOutlined, ArrowRightOutlined, SyncOutlined,MoreOutlined,
+   QuestionCircleOutlined, ArrowRightOutlined, SyncOutlined,MoreOutlined,
   },
   data() {
     return {

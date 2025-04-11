@@ -1,18 +1,5 @@
 <template>
   <div class="realm-roles">
-    <div class="custom-page-header">
-      <h2 class="page-title">Realm roles</h2>
-      <p class="page-description">
-        Realm roles are the roles that you define for use in the current realm.
-        <a
-          href="https://www.keycloak.org/docs/latest/server_admin/index.html#assigning-permissions-using-roles-and-groups"
-        >
-          Learn more
-          <ExportOutlined />
-        </a>
-      </p>
-    </div>
-
     <a-table :columns="columns" :pagination="false" :data-source="sourceData" :scroll="{ y: 340 }">
       <template #bodyCell="{ column, text, record }">
         <template v-if="column.dataIndex === 'name'">
