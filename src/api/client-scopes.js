@@ -28,8 +28,25 @@ async function getOptionalClientScopes() {
         withCredentials: true
     })
 }
-export default {                    
+async function updateAssignedType(data) {
+    let realm = store.state.login.realm;
+    return await http({
+        method: data.method,
+        url: http.adornUrl(`/admin/realms/${realm}/default-${data.type}-client-scopes/${data.id}`),
+        params: {},
+        withCredentials: true
+    }).then((res) => {
+        return res
+    }).catch((err) => {
+        // 处理错误
+        console.error('Error:', err);
+    })
+    
+}
+
+
+export default {
     getClientScopes,
     getDefaultClientScopes,
-    getOptionalClientScopes,
+    getOptionalClientScopes, updateAssignedType,
 }

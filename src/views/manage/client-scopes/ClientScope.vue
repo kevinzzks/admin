@@ -172,8 +172,8 @@ export default {
             this.defaultData = res1.data;
             this.optionalData = res2.data;
             newData.sort((a, b) => a.name.localeCompare(b.name));
-            console.log('defaultData', this.defaultData)
-            console.log('optionalData', this.optionalData)
+            // console.log('defaultData', this.defaultData)
+            // console.log('optionalData', this.optionalData)
             newData = newData.map(item => {
               if (this.defaultData.some(defaultItem => defaultItem.id === item.id)) {
                 return { ...item, type: 'Default' };
@@ -256,9 +256,17 @@ export default {
     handleCancel() {
       this.open = false;
     },
-    handleChange(value, record) {
-      console.log('Selected value:', value);
-      console.log('Record:', record);
+    async handleChange(value, record) {
+      if (value === 'None') {
+        await api.updateAssignedType({ type: record.type.toLowerCase(), id: record.id, method: 'DELETE' })
+      } else if (value === 'Default') {
+        await api.updateAssignedType({ type:record.type.toLowerCase(), id: record.id, method: 'DELETE' })
+        await api.updateAssignedType({ type: value.toLowerCase(), id: record.id, method: 'PUT' })
+      } else if (value === 'Optional') {
+        await api.updateAssignedType({ type: record.type.toLowerCase(), id: record.id, method: 'DELETE' })
+        await api.updateAssignedType({ type: value.toLowerCase(), id: record.id, method: 'PUT' })
+      }
+      this.getClientScopes(); // 刷新数据
     },
 
   }

@@ -15,8 +15,6 @@ import api from '@/api/index';
 export default {
   name: 'ROLES',
   components: { RealmRuler, RolesHeader },
-  // inheritAttrs: false,
-  // props: ['mess'],
   data() {
     return {
 

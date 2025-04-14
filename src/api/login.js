@@ -42,7 +42,25 @@ async function logout(refreshToken) {
     });
 }
 
+async function getSessions(data) {
+    let realm = store.state.login.realm;
+    let pushDate = {
+        "first": data.first,
+        "max": data.max,
+        "type": data.type || "ALL",
+        "search": data.search || "",
+    }
+    return await http({
+        method: "GET",
+        url: http.adornUrl(`/admin/realms/${realm}/ui-ext/sessions`),
+        params: pushDate,
+        withCredentials: true
+    })
+}
+// /admin/realms/master/ui-ext/sessions?first=0&max=11&type=All&search=
+// /admin/realms/master/ui-ext/sessions?first=0&max=11&type=ALL&search=
 export default {
     getToken,
     logout, // 添加登出方法
+    getSessions,
 };
