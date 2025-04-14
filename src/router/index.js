@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import roles from './modules/roles.js';
 import clients from './modules/clients.js';
+import authentication from './modules/authentication.js';
 import {
   UsergroupAddOutlined,TrademarkCircleOutlined,
   ProfileOutlined, SettingOutlined, WalletOutlined,
@@ -120,13 +121,15 @@ const routes = [
       {
         path: 'authentication',
         name: 'Authentication',
-        component: () => import('@/views/configure/identity-providers/index.vue'),
+        component: () => import('@/views/configure/authentication/index.vue'),
+        redirect: '/home/authentication/flows',
         meta: {
           title: 'Authentication',
           icon: h(UngroupOutlined),
           pathname: '/home/authentication',
           type: 'Configure'
         },
+        children: authentication
       },
 
       {

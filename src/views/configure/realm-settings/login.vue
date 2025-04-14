@@ -102,6 +102,7 @@ export default {
           dataIndex: 'operation',
           width: 150,
           fixed: 'right',
+          align: 'right',
         },
 
       ],

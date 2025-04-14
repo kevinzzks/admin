@@ -4,53 +4,46 @@
     <div class="custom-page-header">
       <div>
         <h2 class="page-title">Sessions</h2>
-      <p class="page-description">
-        Sessions are sessions of users in this realm and the clients that they access within the session.
-        <a
-          href="https://www.keycloak.org/docs/latest/server_admin/index.html#managing-user-sessions"
-        >
-          Learn more
-          <ExportOutlined />
-        </a>
-      </p>
+        <p class="page-description">
+          Sessions are sessions of users in this realm and the clients that they access within the session.
+          <a
+            href="https://www.keycloak.org/docs/latest/server_admin/index.html#managing-user-sessions"
+          >
+            Learn more
+            <ExportOutlined />
+          </a>
+        </p>
       </div>
       <a-dropdown placement="bottom" :arrow="{ pointAtCenter: true }">
-            <a-button>
-              Action
-              <DownOutlined />
-            </a-button>
-            <template #overlay>
-              <a-menu>
-                <a-menu-item>
-                  <a href="javascript:;" @click="open=true">Delete this role</a>
-                </a-menu-item>
-              </a-menu>
-            </template>
-          </a-dropdown>
+        <a-button>
+          Action
+          <DownOutlined />
+        </a-button>
+        <template #overlay>
+          <a-menu>
+            <a-menu-item>
+              <a href="javascript:;" @click="open=true">Sign out all active sessions</a>
+            </a-menu-item>
+          </a-menu>
+        </template>
+      </a-dropdown>
     </div>
     <a-table :columns="columns" :pagination="false" :data-source="sourceData" :scroll="{ y: 340 }">
       <template #bodyCell="{ column, text, record }">
-        <template v-if="column.dataIndex === 'clientId'">
+        <template v-if="column.dataIndex === 'username'">
           <a @click="goDetails(record)">{{ text }}</a>
         </template>
-        <template v-else-if="column.dataIndex === 'name'">{{ text }}</template>
-        <template v-else-if="column.dataIndex === 'protocol'">{{ text ? text : 'OpenID Connect' }}</template>
-        <template v-else-if="column.dataIndex === 'description'">{{ text ? text : '——' }}</template>
-        <template v-else-if="column.dataIndex === 'baseUrl'">
-          <span v-if="!text">——</span>
-          <a v-else-if="text.length>10" :href="text">
-            {{ text ? $reqUrl + text : '' }}
-            <ExportOutlined />
-          </a>
+        <template v-if="column.dataIndex === 'start'">
+         {{formatTimestamp(text) }}
+        </template>
+        
+        <template v-else-if="column.dataIndex === 'clients'">
+          <a>{{ extractClientValue(record.clients) }}</a>
         </template>
         <template v-else-if="column.dataIndex === 'operation'">
           <a-popover placement="bottomRight" trigger="click">
             <template #content>
-              <a-space>
-                <a @click="onExport(record)">Export</a>
-              </a-space>
-              <br>
-              <a @click="onOpen(record.key)">Delete</a>
+              <a @click="onDelete(record.key)">Sign out</a>
             </template>
             <MoreOutlined />
           </a-popover>
@@ -74,7 +67,7 @@
               </template>
             </a-input-search>
           </a-space>
-          
+
           <a-space>
             <a-button @click="onRefresh" size="large" class="Refresh" type="text">
               <SyncOutlined />Refresh
@@ -98,7 +91,7 @@
       <p>This action will permanently delete the role "admin" and cannot be undone.</p>
       <template #footer>
         <a-button key="back" type="text" @click="handleCancel">Cancel</a-button>
-        <a-button key="submit" danger type="primary" @click="handleOk">Delete</a-button>
+        <a-button key="submit" type="primary" @click="handleOk">Confirm</a-button>
       </template>
     </a-modal>
   </div>
@@ -107,47 +100,55 @@
 <script>
 import api from '@/api/index.js';
 import {
-  ArrowRightOutlined, SyncOutlined, MoreOutlined, ExportOutlined,DownOutlined
+  ArrowRightOutlined, SyncOutlined, MoreOutlined, ExportOutlined, DownOutlined
 } from '@ant-design/icons-vue';
 export default {
   name: 'LoGin',
   components: {
-    ArrowRightOutlined, SyncOutlined, MoreOutlined, ExportOutlined,DownOutlined
+    ArrowRightOutlined, SyncOutlined, MoreOutlined, ExportOutlined, DownOutlined
   },
   data() {
     return {
-      // Client ID	Name	Type	Description	Home URL
+      // 					
       columns: [
         {
-          title: 'Client ID',
-          dataIndex: 'clientId',
-          width: 150,
+          title: 'User',
+          dataIndex: 'username',
+          width: 120,
         },
-        {
-          title: 'Name',
-          dataIndex: 'name',
-          width: 150,
-        },
+
         {
           title: 'Type',
-          dataIndex: 'protocol',
+          dataIndex: 'type',
+          width: 120,
+        },
+        {
+          title: 'Started',
+          dataIndex: 'start',
+          width: 200,
+        },
+        {
+          title: 'Last access',
+          dataIndex: 'lastAccess',
+          width: 200,
+          customRender: ({ text }) => this.formatTimestamp(text), // 使用格式化方法
+        },
+        {
+          title: 'IP address',
+          dataIndex: 'ipAddress',
           width: 150,
         },
         {
-          title: 'Description',
-          dataIndex: 'description',
+          title: 'Clients',
+          dataIndex: 'clients',
           width: 150,
-        },
-        {
-          title: 'Home URL',
-          dataIndex: 'baseUrl',
-          width: 350,
         },
         {
           title: 'operation',
           dataIndex: 'operation',
           width: 150,
           fixed: 'right',
+          align: 'right',
         },
 
       ],
@@ -216,17 +217,44 @@ export default {
         this.$message.error(err)
       })
     },
-    // 处理删除操作
+    // 格式化时间戳为指定格式
+    formatTimestamp(timestamp) {
+      console.log(timestamp)
+      if (!timestamp) return '——';
+      const date = new Date(timestamp);
+      return date.toLocaleString('en-US', {
+        month: 'numeric',
+        day: 'numeric',
+        year: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        second: 'numeric',
+        hour12: true,
+      });
+    },
+    // 处理登出操作
     onDelete(id) {
-      api.deleteClients({ id }).then(res => {
-        if (res.status === 204) {
-          this.$message.success('删除成功！');
-          this.open = false; // 关闭加载状态
+      api.delSession({ id }).then(res => {
+        if (res.status === 204 || res.status === 200) {
+          this.$message.success('登出成功！');
           let data = { first: (this.pagination.current - 1) * this.pagination.pageSize, max: this.pagination.pageSize + 1 };
           this.data = this.data.filter(item => item.key !== id); // 更新本地数据
           this.getSessions(data, 'add', true); // 刷新数据
         } else {
-          this.$message.error('删除失败！')
+          this.$message.error('登出失败！')
+        }
+      }).catch(err => {
+        this.$message.error(err)
+      })
+    },
+    //
+    onDeletes() {
+      api.delSessions().then(res => {
+        if (res.status === 204 || res.status === 200) {
+          this.$message.success('全部登出成功！');
+          this.$router.push('/login')
+        } else {
+          this.$message.error('登出失败！')
         }
       }).catch(err => {
         this.$message.error(err)
@@ -264,32 +292,18 @@ export default {
       this.$router.push({ path: '/home/users', query: { id: record.id } })
     },
 
-    onOpen(e) {
-      this.open = true;
-      this.delId = e; // 获取要删除的角色ID
-    },
     handleOk() {
-      this.onDelete(this.delId)
+      this.onDeletes()
     },
 
     handleCancel() {
       this.open = false;
     },
 
-    onExport(record) {
-      // console.log(record);
-      this.$message.success('导出成功！')
-      // 添加导出逻辑
-      const jsonData = JSON.stringify(record, null, 2);
-      const blob = new Blob([jsonData], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = `${record.name.replace(/^\$\{(.*)\}$/, '$1') || 'export'}.json`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      URL.revokeObjectURL(url);
+    extractClientValue(clients) {
+      // 使用 Object.values 提取对象中的值
+      const clientValues = Object.values(clients);
+      return clientValues.length > 0 ? clientValues[0] : '——'; // 如果有值，返回第一个值，否则返回占位符
     },
   }
 }

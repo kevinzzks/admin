@@ -71,12 +71,12 @@
 <script>
 import api from '@/api/index.js';
 import {
-  ExportOutlined, QuestionCircleOutlined, ArrowRightOutlined, SyncOutlined,MoreOutlined
+   QuestionCircleOutlined, ArrowRightOutlined, SyncOutlined,MoreOutlined
 } from '@ant-design/icons-vue';
 export default {
   name: 'realmRoles',
   components: {
-    ExportOutlined, QuestionCircleOutlined, ArrowRightOutlined, SyncOutlined,MoreOutlined
+     QuestionCircleOutlined, ArrowRightOutlined, SyncOutlined,MoreOutlined
   },
   data() {
     return {
@@ -101,6 +101,7 @@ export default {
           dataIndex: 'operation',
           width: 150,
           fixed: 'right',
+          align: 'right',
         },
 
       ],

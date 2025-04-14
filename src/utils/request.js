@@ -1,6 +1,7 @@
 import axios from "axios";
-import Cookies from "js-cookie"; 
-// import store from "../store/index.js"
+import Cookies from "js-cookie";
+import router from "@/router"; // 引入 Vue Router
+
 const http = axios.create({
   timeout: 1000 * 30,
   withCredentials: true,
@@ -16,10 +17,10 @@ http.interceptors.request.use(
   (config) => {
     const token = Cookies.get('access_token');
     if (token) {
-        // 如果 Cookie 中存在 Token，设置到请求头
-        config.headers['Authorization'] = `Bearer ${token}`;
+      // 如果 Cookie 中存在 Token，设置到请求头
+      config.headers['Authorization'] = `Bearer ${token}`;
     }
-   return config;
+    return config;
   },
   (error) => {
     return Promise.reject(error);
@@ -35,6 +36,12 @@ http.interceptors.response.use(
     return response;
   },
   (error) => {
+    if (error.response && error.response.status === 401) {
+      // 如果状态码是 401，清除 Token 并跳转到登录页面
+      Cookies.remove('access_token');
+      Cookies.remove('refresh_token');
+      router.push('/login'); // 跳转到登录页面
+    }
     console.error('响应拦截器捕获错误:', error);
     return Promise.reject(error.response); // 返回接口返回的错误信息
   }
@@ -44,7 +51,6 @@ http.interceptors.response.use(
  * 请求地址处理
  * @param {*} actionName action方法名称
  */
-
 http.adornUrl = (actionName) => {
   // 非生产环境, 接口前缀统一使用[/proxyApi/]前缀做代理拦截!
   return (
@@ -65,30 +71,34 @@ http.adornUrl = (actionName) => {
  * @param {*} contentType 数据格式
  */
 http.adornData = (data = {}) => {
-  return JSON.stringify(data)
-}
+  return JSON.stringify(data);
+};
+
 http.getLang = async (locale) => {
   let defaultUrl = http.adornUrl(`/language/${locale}.json?${new Date().getTime() / (1000 * 60 * 30)}`);
   return await http({
       method: "get",
       url: defaultUrl,
       withCredentials: true
-  })
-}
+  });
+};
+
 http.getWeak = async () => {
   let defaultUrl = http.adornUrl(`/IECFAPI/js/weak.json`);
   return await http({
     method: "get",
     url: defaultUrl,
     withCredentials: true
-  })
-}
+  });
+};
+
 http.getTransaction = async () => {
   let defaultUrl = http.adornUrl(`/glbwebauthnv6/auth/v1/transaction`);
   return await http({
     method: "get",
     url: defaultUrl,
     withCredentials: true
-  })
-}
+  });
+};
+
 export default http;

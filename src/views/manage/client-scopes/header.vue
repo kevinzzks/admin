@@ -94,7 +94,7 @@ export default {
   // 生命周期 - 创建完成（访问当前this实例）
   created() {
     if (this.$route.name !== 'CreateRealmRole') {
-      let itemList = this.$router.options.routes[1].children[2].children
+      let itemList = this.$router.options.routes[1].children.find(route => route.name === 'Roles')?.children || [];
       itemList.forEach(item => {
         const menuItem = {
           key: item.name,

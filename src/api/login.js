@@ -41,7 +41,7 @@ async function logout(refreshToken) {
         withCredentials: true,
     });
 }
-
+// 获取会话列表
 async function getSessions(data) {
     let realm = store.state.login.realm;
     let pushDate = {
@@ -57,10 +57,31 @@ async function getSessions(data) {
         withCredentials: true
     })
 }
-// /admin/realms/master/ui-ext/sessions?first=0&max=11&type=All&search=
-// /admin/realms/master/ui-ext/sessions?first=0&max=11&type=ALL&search=
+// 登出会话
+async function delSession(data) {
+    let realm = store.state.login.realm;
+    
+    return await http({
+        method: "DELETE",
+        url: http.adornUrl(`/admin/realms/${realm}/sessions/${data.id}?isOffline:false`),
+        params: {},
+        withCredentials: true
+    })
+}
+// 批量登出会话
+async function delSessions() {
+    let realm = store.state.login.realm;
+    return await http({
+        method: "POST",
+        url: http.adornUrl(`/admin/realms/${realm}/logout-all`),
+        data: '{}',
+        withCredentials: true
+    })
+}
+
+// sessions/e121b124-b082-4db6-a826-352d59d5b905?isOffline=false
 export default {
     getToken,
     logout, // 添加登出方法
-    getSessions,
+    getSessions,delSession,delSessions,
 };

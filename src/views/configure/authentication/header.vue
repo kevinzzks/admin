@@ -2,11 +2,11 @@
 <template>
   <div>
     <div class="custom-page-header">
-      <h2 class="page-title">Clients</h2>
+      <h2 class="page-title">Authentication</h2>
       <p class="page-description">
-        Clients are applications and services that can request authentication of a user.
+        Authentication is the area where you can configure and manage different credential types.
         <a
-          href="https://www.keycloak.org/docs/latest/server_admin/index.html#assembly-managing-clients_server_administration_guide"
+          href="https://www.keycloak.org/docs/latest/server_admin/index.html#configuring-authentication"
         >
           Learn more
           <ExportOutlined />
@@ -20,26 +20,25 @@
       mode="horizontal"
       :items="items"
     />
-    <router-view />
   </div>
 </template>
     
     <script>
 import { ExportOutlined } from '@ant-design/icons-vue';
 export default {
-  name: 'LoGin',
+  name: 'AuthenTication',
   components: { ExportOutlined },
   data() {
     return {
      
-      current: ['ClientsList'],
+      current: ['Flows'],
       items: [],
     }
   },
   // 生命周期 - 创建完成（访问当前this实例）
   created() {
-    let itemList = this.$router.options.routes[1].children.find(route => route.name === 'Roles')?.children || [];
-
+    let itemList = this.$router.options.routes[1].children.find(route => route.name === 'Authentication')?.children || [];
+   
     itemList.forEach(item => {
       const menuItem = {
         key: item.name,
@@ -47,11 +46,7 @@ export default {
       };
       if (item.meta.keepAlive) this.items.push(menuItem);
     });
-
-
-
-
-
+  
   },
   // 生命周期 - 挂载完成（访问DOM元素）
   mounted() { },

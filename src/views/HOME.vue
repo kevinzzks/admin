@@ -165,14 +165,11 @@ export default {
   computed: {
     defaultKey() {
       let pathKey = this.$route.path;
-      if (pathKey.indexOf('home/roles') !== -1) {
-        return '/home/roles';
-      }
-      if (pathKey.indexOf('home/clients') !== -1) {
-        return '/home/clients';
-      }
-      if (pathKey.indexOf('home/users') !== -1) {
-        return '/home/users';
+      const paths = ['home/roles', 'home/clients', 'home/users', 'home/authentication'];
+      for (const path of paths) {
+        if (pathKey.indexOf(path) !== -1) {
+          return `/${path}`;
+        }
       }
       return pathKey;
     },

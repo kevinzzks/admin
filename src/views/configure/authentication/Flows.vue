@@ -3,12 +3,14 @@
   <div>
     <a-table :columns="columns" :pagination="false" :data-source="sourceData" :scroll="{ y: 340 }">
       <template #bodyCell="{ column, text, record }">
-        <template v-if="column.dataIndex === 'name'">
-          <a @click="goDetails(record)">{{ text }}</a>
-          <a-tooltip class="tooltip-defaultRole">
-            <template #title>defaultRole</template>
-            <QuestionCircleOutlined v-if="text=='default-roles-master'" />
-          </a-tooltip>
+        <template v-if="column.dataIndex === 'alias'">
+          <a-space :size="small"> 
+            <a @click="goDetails(record)">{{ text }}</a>
+            <a-tag v-if="record.builtIn" color="default">builtIn</a-tag>
+          </a-space>
+        </template>
+        <template v-if="column.dataIndex === 'usedBy'">
+          <CheckCircleTwoTone v-if="text" two-tone-color="#52c41a" />  {{ usedByFun(text) }}
         </template>
         <template v-else-if="column.dataIndex === 'operation'">
           <a-popover placement="bottomRight" trigger="click">
@@ -72,36 +74,37 @@
     <script>
 import api from '@/api/index.js';
 import {
-  QuestionCircleOutlined, ArrowRightOutlined, SyncOutlined,MoreOutlined,
+  CheckCircleTwoTone, ArrowRightOutlined, SyncOutlined,MoreOutlined,
 } from '@ant-design/icons-vue'
 export default {
   name: 'LoGin',
   components: {
-    QuestionCircleOutlined, ArrowRightOutlined, SyncOutlined,MoreOutlined,
+    CheckCircleTwoTone, ArrowRightOutlined, SyncOutlined,MoreOutlined,
   },
   data() {
     return {
       columns: [
         {
-          title: 'Role name',
-          dataIndex: 'name',
+          title: 'Flow name',
+          dataIndex: 'alias',
           width: 250,
         },
         {
-          title: 'Composite',
-          dataIndex: 'composite',
-          width: 150,
+          title: 'Used by',
+          dataIndex: 'usedBy',
+          width: 250,
         },
         {
           title: 'Description',
           dataIndex: 'description',
-          width: 200,
+          width: 400,
         },
         {
           title: 'operation',
           dataIndex: 'operation',
           width: 150,
           fixed: 'right',
+          align: 'right',
         },
 
       ],
@@ -117,7 +120,7 @@ export default {
   },
   // 生命周期 - 创建完成（访问当前this实例）
   created() {
-    this.getRealmRoles({ first: 0, max: 11 }, 'reset', true); // 获取数据
+    this.getFlows({ first: 0, max: 11 }, 'reset', true); // 获取数据
   },
 
   // 生命周期 - 挂载完成（访问DOM元素）
@@ -129,20 +132,19 @@ export default {
   },
   // Vue方法定义
   methods: {
-    async getRealmRoles(data = {}, type = 'add', token = true) {
+    async getFlows(data = {}, type = 'add', token = true) {
       if (token) {
         await this.$store.dispatch('login/getToken', {})
       }
 
-      api.getRealmRoles(data).then(res => {
+      api.getFlows(data).then(res => {
         if (res.status === 200) {
           if (res.data) {
             let newData = res.data.map(item => {
               return {
                 ...item,
                 key: item.id, // 设置唯一标识
-                description: item.description.replace(/^\$\{(.*)\}$/, '$1'), // 提取 ${} 中的内容
-                composite: item.composite ? 'True' : 'False', // 转换 composite 为字符串
+                
               };
             });
             // this.data = newData; // 只显示前 pageSize 条数据
@@ -178,7 +180,7 @@ export default {
           this.open = false; // 关闭加载状态
           let data = { first: (this.pagination.current - 1) * this.pagination.pageSize, max: this.pagination.pageSize + 1 };
           this.data = this.data.filter(item => item.key !== id); // 更新本地数据
-          this.getRealmRoles(data, 'add', true); // 刷新数据
+          this.getFlows(data, 'add', true); // 刷新数据
         } else {
           this.$message.error('删除失败！')
         }
@@ -190,7 +192,7 @@ export default {
     onSearch(searchValue) {
       let data = { search: searchValue, first: 0, max: this.pagination.pageSize + 1 }
       this.pagination.current = 1;
-      this.getRealmRoles(data, 'reset', true); // 获取数据
+      this.getFlows(data, 'reset', true); // 获取数据
     },
     // 处理Refresh
     onRefresh() {
@@ -200,7 +202,7 @@ export default {
         current: 1,
       }
       let data = { first: 0, max: 11 }
-      this.getRealmRoles(data, 'reset', true); // 获取数据
+      this.getFlows(data, 'reset', true); // 获取数据
     },
     // 处理创建操作
     onCreateRule() {
@@ -211,7 +213,7 @@ export default {
       this.pagination.current = current
       this.pagination.pageSize = pageSize
       let data = { first: (this.pagination.current - 1) * this.pagination.pageSize, max: this.pagination.pageSize + 1 };
-      this.getRealmRoles(data, 'add', true); // 获取数据
+      this.getFlows(data, 'add', true); // 获取数据
     },
     // 处理跳转到详情页操作
     goDetails(record) {
@@ -229,21 +231,18 @@ export default {
     handleCancel() {
       this.open = false;
     },
+    usedByFun(text) {
+      if(!text){
+        return 'Not in use'
+      }else{
+        return text.values[0]
+      }
+    }
 
   }
 }
     </script>
     
-    <style scoped>
-/*@import url(''); 引入css类*/
-.horizontal-header {
-  padding: 0;
-  margin-bottom: 40px;
-}
-.page-title-conter {
-  display: flex;
-  justify-content: space-between;
-}
-</style>
+    <style scoped></style>
   
   

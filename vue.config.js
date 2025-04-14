@@ -50,7 +50,7 @@ module.exports = defineConfig({
       });
   },
   configureWebpack: (config) => {
-    // 使用时间戳生成版本号
+    // 使用毫秒级时间戳生成版本号
     const version = `1.0.1.${Date.now()}`;
 
     // 将版本号注入到全局变量
