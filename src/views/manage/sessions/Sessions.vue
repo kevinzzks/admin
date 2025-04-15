@@ -28,7 +28,7 @@
         </template>
       </a-dropdown>
     </div>
-    <a-table :columns="columns" :pagination="false" :data-source="sourceData" :scroll="{ y: 340 }">
+    <a-table :columns="columns" :pagination="false" :data-source="sourceData" :scroll="{ y: 440 }">
       <template #bodyCell="{ column, text, record }">
         <template v-if="column.dataIndex === 'username'">
           <a @click="goDetails(record)">{{ text }}</a>
