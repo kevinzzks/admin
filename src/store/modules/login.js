@@ -6,6 +6,7 @@ export default {
       exampleStateA: 'Hello from Module A',
       client: {},
       realm: 'master',
+      realmDetails: {},
     },
     mutations: {
       setExampleStateA(state, payload) {
@@ -16,7 +17,15 @@ export default {
       },
       setRealm(state, payload) {
         state.realm = payload;
-      }
+      },
+      setRealmDetails(state, payload) {
+        console.log(payload);
+        
+        state.realmDetails = {
+          ...state.realmDetails,
+          ...payload
+        };
+      },
     },
     actions: {
       updateExampleStateA({ commit }, payload) {

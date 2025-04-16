@@ -2,11 +2,12 @@
 <template>
   <div>
     <div class="custom-page-header">
-      <h2 class="page-title">Clients</h2>
+      <h2 class="page-title">master</h2>
       <p class="page-description">
-        Clients are applications and services that can request authentication of a user.
+        Realm settings are settings that control the options for users, applications, roles, and groups in the current realm.
         <a
-          href="https://www.keycloak.org/docs/latest/server_admin/index.html#assembly-managing-clients_server_administration_guide"
+          href="https://www.keycloak.org/docs/latest/server_admin/index.html#configuring-realms"
+          target="_blank"
         >
           Learn more
           <ExportOutlined />
@@ -31,14 +32,14 @@ export default {
   components: { ExportOutlined },
   data() {
     return {
-     
-      current: ['ClientsList'],
+
+      current: ['SettingLogin'],
       items: [],
     }
   },
   // 生命周期 - 创建完成（访问当前this实例）
   created() {
-    let itemList = this.$router.options.routes[1].children.find(route => route.name === 'Roles')?.children || [];
+    let itemList = this.$router.options.routes[1].children.find(route => route.name === 'RealmSettings')?.children || [];
 
     itemList.forEach(item => {
       const menuItem = {

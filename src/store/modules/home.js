@@ -1,7 +1,7 @@
 export default {
     namespaced: true,
     state: {
-      roleDetails:{}
+      roleDetails: {}
     },
     mutations: {
       setRoleDetails(state, payload) {

@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import roles from './modules/roles.js';
 import clients from './modules/clients.js';
 import authentication from './modules/authentication.js';
+import setting from './modules/settings.js';
 import {
   UsergroupAddOutlined,TrademarkCircleOutlined,
   ProfileOutlined, SettingOutlined, WalletOutlined,
@@ -109,12 +110,15 @@ const routes = [
         path: 'realm-settings',
         name: 'RealmSettings',
         component: () => import('@/views/configure/realm-settings/index.vue'),
+        redirect: '/home/realm-settings/login',
         meta: {
           title: 'Realm settings',
           icon: h(SettingOutlined),
           pathname: '/home/realm-settings',
           type: 'Configure'
         },
+        children: setting
+
       },
 
     

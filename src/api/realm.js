@@ -30,7 +30,7 @@ async function setRealm(data) {
     return await http({
         method: "put",
         url: http.adornUrl(`/admin/realms/${realm}`),
-        params: data,
+        data: data,
         withCredentials: true
     })
 }
