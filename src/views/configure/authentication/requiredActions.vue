@@ -4,19 +4,17 @@
     <a-table :columns="columns" :pagination="false" :data-source="data" :scroll="{ y: 640 }">
       <template #bodyCell="{ column, text, record }">
         <template v-if="column.dataIndex === 'name'">
-          <a-space :size="small">
+          <a-space size="small">
             <UnorderedListOutlined />
             <span>{{ text }}</span>
           </a-space>
         </template>
 
         <template v-if="column.dataIndex === 'enabled'">
-          <a-switch :checked="text" @change="changeTheme" checked-children="ON" un-checked-children="OFF" >
-            
-          </a-switch>
+          <a-switch :checked="text" @change="(e)=>changeEnabled(e,record)" checked-children="ON" un-checked-children="OFF" />
         </template>
         <template v-if="column.dataIndex === 'defaultAction'" >
-          <a-switch :checked="text" :disabled="!record.enabled" @change="changeTheme" checked-children="ON" un-checked-children="OFF" />
+          <a-switch :checked="text" :disabled="!record.enabled" @change="(e)=>changeDefaultAction(e,record)" checked-children="ON" un-checked-children="OFF" />
         </template>
         <template v-else-if="column.dataIndex === 'configurable'">
           <a-popover placement="bottomRight" trigger="click">
@@ -93,15 +91,18 @@ export default {
   },
   // Vue方法定义
   methods: {
-    async getRequiredActions() {
-      await this.$store.dispatch('login/getToken', {})
+    async getRequiredActions(token=true) {
+      if (token) {
+        await this.$store.dispatch('login/getToken', {})
+      }
+      
       api.getRequiredActions().then(res => {
         if (res.status === 200) {
           if (res.data) {
             this.data = res.data.map(item => {
               return {
                 ...item,
-                key: item.id, // 设置唯一标识
+                key: item.providerId, // 设置唯一标识
 
               };
             })
@@ -131,7 +132,52 @@ export default {
       this.open = false;
     },
 
-
+    changeDefaultAction(e, record) {
+      let data = {
+        ...record,
+        defaultAction: e,
+      }
+      this.data = this.data.map(item => {
+        if (item.providerId === record.providerId) {
+          return { ...item, defaultAction: e };
+        }
+        return item;
+      });
+      api.upDataRequiredAction(data).then(res => {
+        if (res.status === 200 || res.status === 204) {
+          this.$message.success('访问成功！')
+          this.getRequiredActions()
+        } else {
+          this.$message.error('访问失败！')
+        }
+      }).catch(err => {
+        this.$router.push('/login')
+        this.$message.error(err)
+      })
+    },
+    changeEnabled(e, record) {
+      let data = {
+        ...record,
+        enabled: e,
+      }
+      this.data = this.data.map(item => {
+        if (item.providerId === record.providerId) {
+          return { ...item, enabled: e };
+        }
+        return item;
+      });
+      api.upDataRequiredAction(data).then(res => {
+        if (res.status === 200 || res.status === 204) {
+          this.$message.success('访问成功！')
+          this.getRequiredActions();
+        } else {
+          this.$message.error('访问失败！')
+        }
+      }).catch(err => {
+        this.$router.push('/login')
+        this.$message.error(err)
+      })
+    },
   }
 }
     </script>

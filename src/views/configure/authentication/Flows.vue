@@ -1,10 +1,10 @@
-<!-- Dom模板 -->
+<!-- Dom模板 small -->
 <template>
   <div>
     <a-table :columns="columns" :pagination="false" :data-source="sourceData" :scroll="{ y: 440 }">
       <template #bodyCell="{ column, text, record }">
         <template v-if="column.dataIndex === 'alias'">
-          <a-space :size="small"> 
+          <a-space size="small"> 
             <a @click="goDetails(record)">{{ text }}</a>
             <a-tag v-if="record.builtIn" color="default">builtIn</a-tag>
           </a-space>
@@ -149,14 +149,14 @@ export default {
             });
             // this.data = newData; // 只显示前 pageSize 条数据
             if (type === 'reset') {
-              this.data = newData;
+              this.data = newData.sort((a, b) => a.alias.localeCompare(b.alias));
             } else {
               this.data = this.data.map(existingItem => {
                 const newItem = newData.find(newItem => newItem.id === existingItem.id);
                 return newItem ? newItem : existingItem;
               }).concat(
                 newData.filter(newItem => !this.data.some(existingItem => existingItem.id === newItem.id))
-              );
+              ).sort((a, b) => a.alias.localeCompare(b.alias))
             }
 
             this.$message.success('访问成功！')

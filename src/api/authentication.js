@@ -1,6 +1,6 @@
 import http from '@/utils/request'
 import store from "@/store/index.js"
-// 查询roles角色
+// 
 async function getFlows(data) {
     let realm = store.state.login.realm;
     let pushDate = {
@@ -15,7 +15,7 @@ async function getFlows(data) {
     })
 }
 
-// 查询roles角色
+// 
 async function getRequiredActions() {
     let realm = store.state.login.realm;
     
@@ -26,7 +26,31 @@ async function getRequiredActions() {
         withCredentials: true
     })
 }
+
+//
+// /authentication/required-actions/TERMS_AND_CONDITIONS
+async function upDataRequiredAction(data) {
+    let realm = store.state.login.realm;
+    
+    // 移除不支持的字段
+    const validData = {
+        alias: data.alias,
+        name: data.name,
+        enabled: data.enabled,
+        defaultAction: data.defaultAction,
+        priority: data.priority,
+        providerId: data.providerId,
+        config: data.config
+    };
+    
+    return await http({
+        method: "PUT",
+        url: http.adornUrl(`/admin/realms/${realm}/authentication/required-actions/${data.providerId}`),
+        data: validData,
+        withCredentials: true
+    })
+}
 export default {
     getFlows,
-    getRequiredActions,
+    getRequiredActions,upDataRequiredAction
 }
