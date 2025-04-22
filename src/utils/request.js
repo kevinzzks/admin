@@ -32,18 +32,49 @@ http.interceptors.request.use(
  */
 http.interceptors.response.use(
   (response) => {
-    // console.log('响应拦截器收到响应:', response.data);
     return response;
   },
   (error) => {
-    if (error.response && error.response.status === 401) {
-      // 如果状态码是 401，清除 Token 并跳转到登录页面
-      Cookies.remove('access_token');
-      Cookies.remove('refresh_token');
-      router.push('/login'); // 跳转到登录页面
+    console.error('HTTP Error:', {
+      status: error.response?.status,
+      data: error.response?.data,
+      config: {
+        url: error.config?.url,
+        method: error.config?.method,
+        headers: error.config?.headers
+      }
+    });
+
+    if (error.response) {
+      switch (error.response.status) {
+        case 401:
+          // 未授权，可能是 token 过期或无效
+          Cookies.remove('access_token');
+          Cookies.remove('refresh_token');
+          router.push('/login');
+          break;
+        // case 403:
+        //   // 禁止访问，可能是权限不足
+        //   console.error('权限不足，请确认账号权限');
+        //   break;
+        case 404:
+          // 资源不存在
+          console.error('请求的资源不存在');
+          break;
+        case 500:
+          // 服务器错误
+          console.error('服务器内部错误');
+          break;
+      }
+    } else if (error.request) {
+      // 请求已发出但没有收到响应
+      console.error('无法连接到服务器，请检查网络连接');
+    } else {
+      // 请求配置有误
+      console.error('请求配置错误:', error.message);
     }
-    console.error('响应拦截器捕获错误:', error);
-    return Promise.reject(error.response); // 返回接口返回的错误信息
+    
+    return Promise.reject(error.response || error);
   }
 );
 

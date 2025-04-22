@@ -188,7 +188,7 @@ export default {
           this.$message.error('访问失败！')
         }
       }).catch(err => {
-        this.$router.push('/login')
+        // this.$router.push('/login')
         this.$message.error(err)
       })
     },

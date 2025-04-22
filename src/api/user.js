@@ -70,6 +70,20 @@ async function updateRealmRole(data) {
         withCredentials: true
     })
 }
+// 重置用户密码
+async function resetPassword(userId, password) {
+    let realm = store.state.login.realm;
+    return await http({
+        method: "PUT",
+        url: http.adornUrl(`/admin/realms/${realm}/users/${userId}/reset-password`),
+        data: {
+            type: "password",
+            value: password,
+            temporary: false
+        },
+        withCredentials: true
+    })
+}
 export default {
-    getUsers,createRealmRoles,deleteRealmRoles,getRealmRole,updateRealmRole
-} 
+    getUsers,createRealmRoles,deleteRealmRoles,getRealmRole,updateRealmRole,resetPassword
+}

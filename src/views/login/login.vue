@@ -74,16 +74,39 @@ export default {
     this.$store.commit('login/setClient', this.$route.query);
   },
   // 生命周期 - 挂载完成（访问DOM元素）
-  mounted() { },
+  mounted() {
+    // async function parseProperties(url) {
+    //   const response = await fetch(url);
+    //   const text = await response.text();
+    //   const lines = text.split('\n');
+    //   const data = {};
+    //   lines.forEach(line => {
+    //     if (line.trim() && !line.startsWith('#')) {
+    //       const [rawKey, ...rawValue] = line.split('=');
+    //       const key = rawKey.trim().replace(/\\=/g, '='); // 处理键中的转义符
+    //       const value = rawValue.join('=').trim().replace(/\\=/g, '='); // 处理值中的转义符
+    //       data[key] = value;
+    //     }
+    //   });
+    //   return data;
+    // }
+
+    // // 使用示例
+    // parseProperties('./messages/messages_sl.properties').then(data => {
+    //   console.log(data); // 输出 "Hello=World"
+    // }).catch(error => {
+    //   console.error('Error loading properties:', error);
+    // });
+  },
   computed: {},
   // Vue方法定义
   methods: {
     onFinish(values) {
-      api.getToken(values,'password').then(res => {
+      api.getToken(values, 'password').then(res => {
         this.$store.commit('login/setClient', { ...this.$store.state.login.client, ...res.data });
         if (res.status == 200) {
           // 设置 Axios 的全局请求头
-          let {access_token,refresh_token} = res.data;
+          let { access_token, refresh_token } = res.data;
           this.$Cookies.set('access_token', access_token, 1); // 设置 Cookie，有效期为 1 天
           this.$Cookies.set('refresh_token', refresh_token, 1)
           this.$message.success('登录成功！')

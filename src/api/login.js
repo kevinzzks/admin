@@ -4,7 +4,7 @@ import store from "@/store/index.js"
 async function getToken(data, type) {
     let realm = store.state.login.realm;
     const params = new URLSearchParams();
-    params.append('client_id', 'myclient');
+    params.append('client_id', 'admin-cli');
     if (type == 'password') {
         params.append('grant_type', 'password');
         params.append('username', data.username);
