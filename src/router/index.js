@@ -51,7 +51,7 @@ const routes = [
         name: 'Roles',
         component: () => import('@/views/manage/roles/index.vue'),
         meta: {
-          title: 'Realm roles',
+          title: 'titleRoles',
           icon: h(TrademarkCircleOutlined),
           pathname: '/home/roles',
           type: 'Manage'

@@ -68,7 +68,8 @@
     
     <script>
 import api from '@/api/index';
-import { DownOutlined,ExportOutlined } from '@ant-design/icons-vue';
+    import { DownOutlined, ExportOutlined } from '@ant-design/icons-vue';
+
 export default {
   name: 'LoGin',
   components: { DownOutlined,ExportOutlined },
@@ -79,7 +80,7 @@ export default {
       routes: [
         {
           path: '/home/roles',
-          breadcrumbName: 'Realm roles',
+          breadcrumbName: this.$t("titleRoles"),
         },
         {
           path: '',

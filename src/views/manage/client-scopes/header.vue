@@ -77,7 +77,7 @@ export default {
       routes: [
         {
           path: '/home/roles',
-          breadcrumbName: 'Realm roles',
+          breadcrumbName: this.$t("titleRoles"),
         },
         {
           path: '',

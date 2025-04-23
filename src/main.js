@@ -29,4 +29,8 @@ app.use(router);
 app.use(Antd);
 app.use(i18n); // 使用 vue-i18n
 
+app.config.globalProperties.$t = i18n.global.t;
+
+app.config.globalProperties.$i18n = i18n;
+
 app.mount('#app');

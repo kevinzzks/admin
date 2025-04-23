@@ -2,7 +2,7 @@
 <template>
   <div>
     <div class="custom-page-header"  v-if="$route.name == 'Roles'">
-      <h2 class="page-title">Realm roles</h2>
+      <h2 class="page-title">{{ $t('titleRoles') }}</h2>
       <p class="page-description">
         Realm roles are the roles that you define for use in the current realm.
         <a
