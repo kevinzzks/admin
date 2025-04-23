@@ -20,26 +20,32 @@
       mode="horizontal"
       :items="items"
     />
-    <router-view />
+    <a-modal centered v-model:open="open" title="Delete role?">
+      <p>This action will permanently delete the role "admin" and cannot be undone.</p>
+      <template #footer>
+        <a-button key="back" type="text" @click="handleCancel">{{$t('cancel')}}</a-button>
+        <a-button key="submit" danger type="primary" :loading="loading" @click="handleOk">{{$t('delete')}}</a-button>
+      </template>
+    </a-modal>
   </div>
 </template>
     
-    <script>
-import { ExportOutlined } from '@ant-design/icons-vue';
+<script>
+// import api from '@/api/index';
+import {  ExportOutlined } from '@ant-design/icons-vue'; // 添加 ExportOutlined 图标
+
 export default {
-  name: 'LoGin',
-  components: { ExportOutlined },
+  name: 'RolesHeader',
+  components: {  ExportOutlined }, // 注册 ExportOutlined 组件
   data() {
     return {
-     
       current: ['ClientsList'],
       items: [],
     }
   },
   // 生命周期 - 创建完成（访问当前this实例）
   created() {
-    let itemList = this.$router.options.routes[1].children.find(route => route.name === 'Roles')?.children || [];
-
+    let itemList = this.$router.options.routes[1].children.find(route => route.name === 'Clients')?.children || [];
     itemList.forEach(item => {
       const menuItem = {
         key: item.name,
@@ -48,24 +54,23 @@ export default {
       if (item.meta.keepAlive) this.items.push(menuItem);
     });
 
-
-
-
-
   },
   // 生命周期 - 挂载完成（访问DOM元素）
-  mounted() { },
+  mounted() { 
+
+  },
   computed: {},
   // Vue方法定义
   methods: {
-    goChildren(e) {
+     goChildren(e) {
       this.$router.push({ name: e.key });
     },
+   
   }
 }
-    </script>
+</script>
     
-    <style scoped>
+<style scoped>
 /*@import url(''); 引入css类*/
 .horizontal-header {
   padding: 0;
@@ -75,6 +80,6 @@ export default {
   display: flex;
   justify-content: space-between;
 }
+
 </style>
-  
-  
+

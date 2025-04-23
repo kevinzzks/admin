@@ -1,6 +1,15 @@
 export default
     [
         {
+            path: 'list',
+            name: 'RolesList',
+            component: () => import('@/views/manage/roles/realmRoler.vue'),
+            meta: {
+                pathname: '/home/roles/list',
+                keepAlive: false
+            },
+        },
+        {
             path: 'new',
             name: 'CreateRealmRole',
             component: () => import('@/views/manage/roles/roleCreate.vue'),

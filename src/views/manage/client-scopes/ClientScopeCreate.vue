@@ -8,8 +8,8 @@
         <a-textarea v-model:value="formState.desc" />
       </a-form-item>
       <a-form-item :wrapper-col="{ span: 14, offset: 4 }">
-        <a-button type="primary" @click="onSubmit">Create</a-button>
-        <a-button style="margin-left: 10px" @click="CancelForm">Cancel</a-button>
+        <a-button type="primary" @click="onSubmit">{{$t('create')}}</a-button>
+        <a-button style="margin-left: 10px" @click="CancelForm">{{$t('cancel')}}</a-button>
       </a-form-item>
     </a-form>
   </div>

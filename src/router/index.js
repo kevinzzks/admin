@@ -28,7 +28,7 @@ const routes = [
         component: () => import('@/views/manage/clients/index.vue'),
         redirect: '/home/clients/list',
         meta: {
-          title: 'Clients',
+          title: 'clients',
           icon: h(ProfileOutlined),
           pathname: '/home/clients',
           type: 'Manage',
@@ -40,7 +40,7 @@ const routes = [
         name: 'ClientScopes',
         component: () => import('@/views/manage/client-scopes/index.vue'),
         meta: {
-          title: 'Client scopes',
+          title: 'clientScopes',
           icon: h(FileSyncOutlined),
           pathname: '/home/client-scopes',
           type: 'Manage'
@@ -50,6 +50,7 @@ const routes = [
         path: 'roles',
         name: 'Roles',
         component: () => import('@/views/manage/roles/index.vue'),
+        redirect: '/home/roles/list',
         meta: {
           title: 'titleRoles',
           icon: h(TrademarkCircleOutlined),
@@ -63,7 +64,7 @@ const routes = [
         name: 'Users',
         component: () => import('@/views/manage/users/index.vue'),
         meta: {
-          title: 'Users',
+          title: 'users',
           icon: h(UserAddOutlined),
           pathname: '/home/users',
           type: 'Manage'
@@ -74,7 +75,7 @@ const routes = [
         name: 'Groups',
         component: () => import('@/views/manage/groups/Groups.vue'),
         meta: {
-          title: 'Groups',
+          title: 'groups',
           icon: h(UsergroupAddOutlined),
           pathname: '/home/groups',
           type: 'Manage'
@@ -86,7 +87,7 @@ const routes = [
         name: 'Sessions',
         component: () => import('@/views/manage/sessions/Sessions.vue'),
         meta: {
-          title: 'Sessions',
+          title: 'sessions',
           icon: h(FundProjectionScreenOutlined),
           pathname: '/home/sessions',
           type: 'Manage'
@@ -98,7 +99,7 @@ const routes = [
         name: 'Events',
         component: () => import('@/views/manage/events/index.vue'),
         meta: {
-          title: 'Events',
+          title: 'events',
           icon: h(FireOutlined),
           pathname: '/home/events',
           type: 'Manage'
@@ -112,7 +113,7 @@ const routes = [
         component: () => import('@/views/configure/realm-settings/index.vue'),
         redirect: '/home/realm-settings/login',
         meta: {
-          title: 'Realm settings',
+          title: 'realmSettings',
           icon: h(SettingOutlined),
           pathname: '/home/realm-settings',
           type: 'Configure'
@@ -128,7 +129,7 @@ const routes = [
         component: () => import('@/views/configure/authentication/index.vue'),
         redirect: '/home/authentication/flows',
         meta: {
-          title: 'Authentication',
+          title: 'authentication',
           icon: h(UngroupOutlined),
           pathname: '/home/authentication',
           type: 'Configure'
@@ -141,7 +142,7 @@ const routes = [
         name: 'IdentityProviders',
         component: () => import('@/views/configure/identity-providers/index.vue'),
         meta: {
-          title: 'Identity providers',
+          title: 'identityProviders',
           icon: h(WalletOutlined),
           pathname: '/home/identity-providers',
           type: 'Configure'
@@ -153,7 +154,7 @@ const routes = [
         name: 'UserFederation',
         component: () => import('@/views/configure/user-federation/UserFederation.vue'),
         meta: {
-          title: 'User federation',
+          title: 'userFederation',
           icon: h(UserSwitchOutlined),
           pathname: '/home/user-federation',
           type: 'Configure'
@@ -165,7 +166,7 @@ const routes = [
         name: 'CreateRealm',
         component: () => import('@/views/manage/realms/CreateRealm.vue'),
         meta: {
-          title: 'Create realm',
+          title: 'createRealm',
           pathname: '/home/add-realm',
           type: 'realm'
         },
@@ -175,7 +176,7 @@ const routes = [
         name: 'DetailsRealm',
         component: () => import('@/views/manage/realms/DetailsRealm.vue'),
         meta: {
-          title: 'Realm details',
+          title: 'realmDetails',
           pathname: '/home/realm-details',
           type: 'realm'
         },

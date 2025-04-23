@@ -12,7 +12,7 @@
         <template v-else-if="column.dataIndex === 'operation'">
           <a-popover placement="bottomRight" trigger="click">
             <template #content>
-              <a @click="onOpen(record.key)">Delete</a>
+              <a @click="onOpen(record)">{{$t('delete')}}</a>
             </template>
             <MoreOutlined />
           </a-popover>
@@ -59,10 +59,10 @@
       <!-- <template #footer>Footer</template> -->
     </a-table>
     <a-modal centered v-model:open="open" title="Delete role?">
-      <p>This action will permanently delete the role "admin" and cannot be undone.</p>
+      <p>{{ $t('roleDeleteConfirmDialog', {selectedRoleName: this.oneItem.name}) }}</p>
       <template #footer>
-        <a-button key="back" type="text" @click="handleCancel">Cancel</a-button>
-        <a-button key="submit" danger type="primary" @click="handleOk">Delete</a-button>
+        <a-button key="back" type="text" @click="handleCancel">{{$t('cancel')}}</a-button>
+        <a-button key="submit" danger type="primary" @click="handleOk">{{$t('delete')}}</a-button>
       </template>
     </a-modal>
   </div>
@@ -74,7 +74,7 @@ import {
    QuestionCircleOutlined, ArrowRightOutlined, SyncOutlined,MoreOutlined
 } from '@ant-design/icons-vue';
 export default {
-  name: 'realmRoles',
+  name: 'RealmRoler', // 修改为与文件名一致的 PascalCase 形式
   components: {
      QuestionCircleOutlined, ArrowRightOutlined, SyncOutlined,MoreOutlined
   },
@@ -112,7 +112,7 @@ export default {
       },
       searchValue: '', // 搜索框的值
       open: false, // 删除弹窗的状态
-      delId: '', // 删除的角色ID
+      oneItem: '', // 删除的角色ID
     }
   },
   // 生命周期 - 创建完成（访问当前this实例）
@@ -220,10 +220,10 @@ export default {
 
     onOpen(e) {
       this.open = true;
-      this.delId = e; // 获取要删除的角色ID
+      this.oneItem = e; // 获取要删除的角色ID
     },
     handleOk() {
-      this.onDelete(this.delId)
+      this.onDelete(this.oneItem.key)
     },
     
     handleCancel() {

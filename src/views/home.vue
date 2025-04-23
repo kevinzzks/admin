@@ -23,23 +23,23 @@
           <div class="user-info">
             <a-dropdown placement="bottom" :arrow="{ pointAtCenter: true }">
               <a-button>
-                admin
+                {{ $t('admin') }}&nbsp;
                 <DownOutlined />
               </a-button>
               <template #overlay>
                 <a-menu>
                   <a-menu-item>
-                    <a href="javascript:;">Manage account</a>
+                    <a href="javascript:;">{{$t('manageAccount')}}</a>
                   </a-menu-item>
                   <a-menu-item>
-                    <a href="javascript:;">Realm info</a>
+                    <a href="javascript:;">{{$t('realmInfo')}}</a>
                   </a-menu-item>
                   <a-menu-item>
-                    <a href="javascript:;">Clear Caches</a>
+                    <a href="javascript:;">{{$t('clearCachesTitle')}}</a>
                   </a-menu-item>
                   <a-menu-divider />
                   <a-menu-item>
-                    <a href="javascript:;" @click="onSignout">Sign out</a>
+                    <a href="javascript:;" @click="onSignout">{{ $t('signOut') }}</a>
                   </a-menu-item>
                 </a-menu>
               </template>
@@ -77,12 +77,12 @@
                     <a href="javascript:;">{{item.name}}</a>
                   </a-menu-item>
                   <a-menu-item @click="goCreateRealm">
-                    <a-button type="primary" style="width: 100%">Create realm</a-button>
+                    <a-button type="primary" style="width: 100%">{{ $t('createRealm') }}</a-button>
                   </a-menu-item>
                 </a-menu>
               </template>
             </a-dropdown>
-            <div class="list-title">Manage</div>
+            <div class="list-title">{{ $t('manage') }}</div>
             <a-menu
               :theme="state.theme"
               :selectedKeys="[defaultKey]"
@@ -93,11 +93,11 @@
               <template v-for="item in manageList" :key="item.key">
                 <a-menu-item>
                   <component :is="item.icon" />
-                  <span>{{ item.label }}</span>
+                  <span>{{ $t(item.label) }}</span>
                 </a-menu-item>
               </template>
             </a-menu>
-            <div class="list-title">Configure</div>
+            <div class="list-title">{{ $t('configure') }}</div>
   
             <a-menu
               :theme="state.theme"
@@ -109,7 +109,7 @@
               <template v-for="item in configList" :key="item.key">
                 <a-menu-item>
                   <component :is="item.icon" />
-                  <span>{{ item.label }}</span>
+                  <span>{{ $t(item.label) }}</span>
                 </a-menu-item>
               </template>
             </a-menu>

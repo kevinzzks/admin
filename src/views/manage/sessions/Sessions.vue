@@ -90,7 +90,7 @@
     <a-modal centered v-model:open="open" title="Delete role?">
       <p>This action will permanently delete the role "admin" and cannot be undone.</p>
       <template #footer>
-        <a-button key="back" type="text" @click="handleCancel">Cancel</a-button>
+        <a-button key="back" type="text" @click="handleCancel">{{$t('cancel')}}</a-button>
         <a-button key="submit" type="primary" @click="handleOk">Confirm</a-button>
       </template>
     </a-modal>

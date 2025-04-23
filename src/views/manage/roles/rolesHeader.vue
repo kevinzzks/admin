@@ -1,7 +1,7 @@
 <!-- Dom模板 -->
 <template>
   <div>
-    <div class="custom-page-header"  v-if="$route.name == 'Roles'">
+    <div class="custom-page-header"  v-if="$route.name == 'RolesList'">
       <h2 class="page-title">{{ $t('titleRoles') }}</h2>
       <p class="page-description">
         Realm roles are the roles that you define for use in the current realm.
@@ -48,7 +48,7 @@
       </h2>
     </div>
     <a-menu
-      v-if="$route.name!=='CreateRealmRole' && $route.name !== 'Roles'"
+      v-if="$route.name!=='CreateRealmRole' && $route.name !== 'RolesList'"
       @click="goChildren"
       class="horizontal-header"
       v-model:selectedKeys="current"
@@ -58,8 +58,8 @@
     <a-modal centered v-model:open="open" title="Delete role?">
       <p>This action will permanently delete the role "admin" and cannot be undone.</p>
       <template #footer>
-        <a-button key="back" type="text" @click="handleCancel">Cancel</a-button>
-        <a-button key="submit" danger type="primary" :loading="loading" @click="handleOk">Delete</a-button>
+        <a-button key="back" type="text" @click="handleCancel">{{$t('cancel')}}</a-button>
+        <a-button key="submit" danger type="primary" :loading="loading" @click="handleOk">{{$t('delete')}}</a-button>
       </template>
     </a-modal>
   </div>

@@ -1,20 +1,18 @@
 <!-- Dom模板 -->
 <template>
   <div>
-    <RolesHeader></RolesHeader>
-    <RealmRuler v-if="this.$route.name == 'Roles'" />
-    <router-view v-else />
+    <Header></Header>
+    <router-view />
   </div>
 </template>
   
   <script>
-import RealmRuler from './realmRoler.vue'; // 引入组件
-import RolesHeader from './rolesHeader.vue';
+import Header from './rolesHeader.vue';
 
 import api from '@/api/index';
 export default {
   name: 'ROLES',
-  components: { RealmRuler, RolesHeader },
+  components: {  Header },
   data() {
     return {
 
