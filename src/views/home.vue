@@ -93,7 +93,7 @@
               <template v-for="item in manageList" :key="item.key">
                 <a-menu-item>
                   <component :is="item.icon" />
-                  <span>{{ $t(item.label) }}</span>
+                  <span>{{ item.label }}</span>
                 </a-menu-item>
               </template>
             </a-menu>
@@ -109,7 +109,7 @@
               <template v-for="item in configList" :key="item.key">
                 <a-menu-item>
                   <component :is="item.icon" />
-                  <span>{{ $t(item.label) }}</span>
+                  <span>{{ item.label }}</span>
                 </a-menu-item>
               </template>
             </a-menu>
@@ -216,14 +216,15 @@
             key: item.meta.pathname,
             title: item.meta.title,
             icon: item.meta.icon,
-            label: item.meta.title,
             type: item.meta.type,
           };
   
           // 根据 type 判断加入哪个列表
           if (item.meta.type === 'Manage') {
+            menuItem.label = this.$t(item.meta.title); 
             this.manageList.push(menuItem);
-          } else  if (item.meta.type === 'Configure') {
+          } else if (item.meta.type === 'Configure') {
+            menuItem.label = this.$t(item.meta.title); 
             this.configList.push(menuItem);
           }
         });

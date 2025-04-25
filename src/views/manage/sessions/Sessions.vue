@@ -5,11 +5,11 @@
       <div>
         <h2 class="page-title">Sessions</h2>
         <p class="page-description">
-          Sessions are sessions of users in this realm and the clients that they access within the session.
+          {{$t('sessionExplain')}}
           <a
             href="https://www.keycloak.org/docs/latest/server_admin/index.html#managing-user-sessions"
           >
-            Learn more
+            {{ $t('learnMore') }}
             <ExportOutlined />
           </a>
         </p>
@@ -87,7 +87,7 @@
       </template>
       <!-- <template #footer>Footer</template> -->
     </a-table>
-    <a-modal centered v-model:open="open" title="Delete role?">
+    <a-modal centered v-model:open="open" :title="$t('roleDeleteConfirm')">
       <p>This action will permanently delete the role "admin" and cannot be undone.</p>
       <template #footer>
         <a-button key="back" type="text" @click="handleCancel">{{$t('cancel')}}</a-button>

@@ -5,7 +5,7 @@ export default [
     component: () => import('@/views/configure/authentication/Flows.vue'),
     meta: {
       keepAlive: true,
-      title: 'Flows',
+      title: 'flows',
     },
   },
   {
@@ -14,7 +14,7 @@ export default [
     component: () => import('@/views/configure/authentication/requiredActions.vue'),
     meta: {
       keepAlive: true,
-      title: "Required actions"
+      title: "requiredActions"
     },
   },
   {
@@ -23,7 +23,7 @@ export default [
     component: () => import('@/views/configure/authentication/policies.vue'),
     meta: {
       keepAlive: true,
-      title: "Policies",
+      title: "policies",
     },
   },
   

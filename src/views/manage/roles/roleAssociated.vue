@@ -8,7 +8,7 @@
 <script>
 // import api from '@/api/index.js';
 export default {
-  name: 'LoGin',
+  name: 'RoleAssociated',
   components: {},
   data() {
     return {

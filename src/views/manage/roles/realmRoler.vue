@@ -58,8 +58,8 @@
       </template>
       <!-- <template #footer>Footer</template> -->
     </a-table>
-    <a-modal centered v-model:open="open" title="Delete role?">
-      <p>{{ $t('roleDeleteConfirmDialog', {selectedRoleName: this.oneItem.name}) }}</p>
+    <a-modal centered v-model:open="open" :title="$t('roleDeleteConfirm')">
+      <!-- <p>{{ $t('roleDeleteConfirmDialog', {selectedRoleName: this.oneItem.name}) }}</p> -->
       <template #footer>
         <a-button key="back" type="text" @click="handleCancel">{{$t('cancel')}}</a-button>
         <a-button key="submit" danger type="primary" @click="handleOk">{{$t('delete')}}</a-button>

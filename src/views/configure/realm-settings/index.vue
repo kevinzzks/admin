@@ -4,12 +4,12 @@
     <div class="custom-page-header">
       <h2 class="page-title">master</h2>
       <p class="page-description">
-        Realm settings are settings that control the options for users, applications, roles, and groups in the current realm.
+        {{ $t('realmSettingsExplain') }}
         <a
           href="https://www.keycloak.org/docs/latest/server_admin/index.html#configuring-realms"
           target="_blank"
         >
-          Learn more
+          {{ $t('learnMore') }}
           <ExportOutlined />
         </a>
       </p>
@@ -44,9 +44,11 @@ export default {
     itemList.forEach(item => {
       const menuItem = {
         key: item.name,
-        label: item.meta.title,
       };
-      if (item.meta.keepAlive) this.items.push(menuItem);
+      if (item.meta.keepAlive) {
+        menuItem.label = this.$t(item.meta.title);
+        this.items.push(menuItem);
+      }
     });
 
 

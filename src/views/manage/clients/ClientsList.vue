@@ -20,7 +20,7 @@
           <a-popover placement="bottomRight" trigger="click">
             <template #content>
               <a-space>
-                <a @click="onExport(record)">Export</a>
+                <a @click="onExport(record)">{{ $t('export') }}</a>
               </a-space>
               <br>
               <a @click="onOpen(record.key)">{{$t('delete')}}</a>
@@ -69,7 +69,7 @@
       </template>
       <!-- <template #footer>Footer</template> -->
     </a-table>
-    <a-modal centered v-model:open="open" title="Delete role?">
+    <a-modal centered v-model:open="open" :title="$t('roleDeleteConfirm')">
       <p>This action will permanently delete the role "admin" and cannot be undone.</p>
       <template #footer>
         <a-button key="back" type="text" @click="handleCancel">{{$t('cancel')}}</a-button>
@@ -94,27 +94,27 @@ export default {
       // Client ID	Name	Type	Description	Home URL
       columns: [
         {
-          title: 'Client ID',
+          title: this.$t('clientId'),
           dataIndex: 'clientId',
           width: 150,
         },
         {
-          title: 'Name',
+          title: this.$t('name'),
           dataIndex: 'name',
           width: 150,
         },
         {
-          title: 'Type',
+          title: this.$t('type'),
           dataIndex: 'protocol',
           width: 150,
         },
         {
-          title: 'Description',
+          title: this.$t('description'),
           dataIndex: 'description',
           width: 150,
         },
         {
-          title: 'Home URL',
+          title: this.$t('homeURL'),
           dataIndex: 'baseUrl',
           width: 350,
         },

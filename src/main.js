@@ -10,6 +10,7 @@ import { createI18n } from 'vue-i18n'; // 引入 vue-i18n
 import messages from './locales'; // 引入语言包
 
 const i18n = createI18n({
+  legacy: false,  // 使用 Composition API
   locale: 'zh_CN', // 设置默认语言
   fallbackLocale: 'en', // 设置回退语言
   messages, // 语言包

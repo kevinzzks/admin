@@ -12,7 +12,7 @@ export default [
     name: 'ClientsList',
     component: () => import('@/views/manage/clients/ClientsList.vue'),
     meta: {
-      title: 'Clients list',
+      title: 'clientsList',
       keepAlive: true
     },
   },
@@ -21,7 +21,7 @@ export default [
     name: 'InitialAccessToken',
     component: () => import('@/views/manage/clients/InitialAccessToken.vue'),
     meta: {
-      title: 'Initial access token',
+      title: 'initialAccessToken',
       keepAlive: true
     },
   },
@@ -30,7 +30,7 @@ export default [
     name: 'ClientRegistration',
     component: () => import('@/views/manage/clients/ClientRegistration.vue'),
     meta: {
-      title: 'Client registration',
+      title: 'clientRegistration',
       keepAlive: true
     },
   },

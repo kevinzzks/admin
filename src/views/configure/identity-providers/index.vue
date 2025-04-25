@@ -3,13 +3,13 @@
   <div>
     <div class="custom-page-header">
       <div>
-        <h2 class="page-title">Identity providers</h2>
+        <h2 class="page-title">{{ $t('identityProviders') }}</h2>
         <p class="page-description">
-          Identity providers are social networks or identity brokers that allow users to authenticate to Keycloak.
+          {{ $t('listExplain') }}
           <a
             href="https://www.keycloak.org/docs/latest/server_admin/index.html#_identity_broker"
           >
-            Learn more
+            {{ $t('learnMore') }}
             <ExportOutlined />
           </a>
         </p>

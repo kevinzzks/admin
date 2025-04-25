@@ -3,13 +3,13 @@
   <div>
     <div class="custom-page-header">
       <div>
-        <h2 class="page-title">User federation</h2>
+        <h2 class="page-title">{{ $t('userFederation') }}</h2>
         <p class="page-description">
-          User federation provides access to external databases and directories, such as LDAP and Active Directory.
+          {{ $t('userFederationExplain') }}
           <a
             href="https://www.keycloak.org/docs/latest/server_admin/index.html#_user-storage-federation"
           >
-            Learn more
+            {{ $t('learnMore') }}
             <ExportOutlined />
           </a>
         </p>

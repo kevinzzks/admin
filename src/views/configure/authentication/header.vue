@@ -2,13 +2,13 @@
 <template>
   <div>
     <div class="custom-page-header">
-      <h2 class="page-title">Authentication</h2>
+      <h2 class="page-title">{{$t('authentication')}}</h2>
       <p class="page-description">
-        Authentication is the area where you can configure and manage different credential types.
+        {{ $t('authenticationExplain') }}
         <a
           href="https://www.keycloak.org/docs/latest/server_admin/index.html#configuring-authentication"
         >
-          Learn more
+          {{ $t('learnMore') }}
           <ExportOutlined />
         </a>
       </p>
@@ -30,7 +30,7 @@ export default {
   components: { ExportOutlined },
   data() {
     return {
-     
+
       current: ['Flows'],
       items: [],
     }
@@ -38,15 +38,17 @@ export default {
   // 生命周期 - 创建完成（访问当前this实例）
   created() {
     let itemList = this.$router.options.routes[1].children.find(route => route.name === 'Authentication')?.children || [];
-   
+
     itemList.forEach(item => {
       const menuItem = {
         key: item.name,
-        label: item.meta.title,
       };
-      if (item.meta.keepAlive) this.items.push(menuItem);
+      if (item.meta.keepAlive) {
+        menuItem.label = this.$t(item.meta.title);
+        this.items.push(menuItem);
+      }
     });
-  
+
   },
   // 生命周期 - 挂载完成（访问DOM元素）
   mounted() { },

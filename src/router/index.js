@@ -176,7 +176,7 @@ const routes = [
         name: 'DetailsRealm',
         component: () => import('@/views/manage/realms/DetailsRealm.vue'),
         meta: {
-          title: 'realmDetails',
+          title: 'createRealm',
           pathname: '/home/realm-details',
           type: 'realm'
         },

@@ -4,11 +4,11 @@
     <div class="custom-page-header">
       <h2 class="page-title">{{ $t('clients') }}</h2>
       <p class="page-description">
-        Clients are applications and services that can request authentication of a user.
+        {{$t('clientsExplain')}}
         <a
           href="https://www.keycloak.org/docs/latest/server_admin/index.html#assembly-managing-clients_server_administration_guide"
         >
-          Learn more
+          {{ $t('learnMore') }}
           <ExportOutlined />
         </a>
       </p>
@@ -31,7 +31,7 @@ export default {
   components: { ExportOutlined },
   data() {
     return {
-     
+
       current: ['ClientsList'],
       items: [],
     }
@@ -43,9 +43,11 @@ export default {
     itemList.forEach(item => {
       const menuItem = {
         key: item.name,
-        label: item.meta.title,
       };
-      if (item.meta.keepAlive) this.items.push(menuItem);
+      if (item.meta.keepAlive) {
+        menuItem.label = this.$t(item.meta.title);
+        this.items.push(menuItem);
+      }
     });
 
 

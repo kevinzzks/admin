@@ -1,14 +1,14 @@
 <!-- Dom模板 -->
 <template>
   <div>
-    <div class="custom-page-header"  v-if="$route.name == 'RolesList'">
+    <div class="custom-page-header" v-if="$route.name == 'RolesList'">
       <h2 class="page-title">{{ $t('titleRoles') }}</h2>
       <p class="page-description">
-        Realm roles are the roles that you define for use in the current realm.
+        {{$t('roleExplain')}}
         <a
           href="https://www.keycloak.org/docs/latest/server_admin/index.html#assigning-permissions-using-roles-and-groups"
         >
-          Learn more
+          {{ $t('learnMore') }}
           <ExportOutlined />
         </a>
       </p>
@@ -55,11 +55,17 @@
       mode="horizontal"
       :items="items"
     />
-    <a-modal centered v-model:open="open" title="Delete role?">
+    <a-modal centered v-model:open="open" :title="$t('roleDeleteConfirm')">
       <p>This action will permanently delete the role "admin" and cannot be undone.</p>
       <template #footer>
         <a-button key="back" type="text" @click="handleCancel">{{$t('cancel')}}</a-button>
-        <a-button key="submit" danger type="primary" :loading="loading" @click="handleOk">{{$t('delete')}}</a-button>
+        <a-button
+          key="submit"
+          danger
+          type="primary"
+          :loading="loading"
+          @click="handleOk"
+        >{{$t('delete')}}</a-button>
       </template>
     </a-modal>
   </div>
@@ -99,11 +105,12 @@ export default {
       itemList.forEach(item => {
         const menuItem = {
           key: item.name,
-          label: item.meta.title,
         };
-        if (item.meta.keepAlive) this.items.push(menuItem);
+        if (item.meta.keepAlive) {
+          menuItem.label = this.$t(item.meta.title);
+          this.items.push(menuItem);
+        }
       });
-      
     }
 
 

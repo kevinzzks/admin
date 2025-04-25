@@ -58,7 +58,7 @@
       </template>
       <!-- <template #footer>Footer</template> -->
     </a-table>
-    <a-modal centered v-model:open="open" title="Delete role?">
+    <a-modal centered v-model:open="open" :title="$t('roleDeleteConfirm')">
       <p>This action will permanently delete the role "admin" and cannot be undone.</p>
       <template #footer>
         <a-button key="back" type="text" @click="handleCancel">{{$t('cancel')}}</a-button>

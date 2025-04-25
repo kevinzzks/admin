@@ -5,7 +5,7 @@ export default
             name: 'General',
             component: () => import('@/views/configure/realm-settings/general.vue'),
             meta: {
-                title: 'General',
+                title: 'general',
                 keepAlive: true
             },
         },
@@ -14,7 +14,7 @@ export default
             name: 'SettingLogin',
             component: () => import('@/views/configure/realm-settings/login.vue'),
             meta: {
-                title: 'SettingLogin',
+                title: 'general',
                 keepAlive: true
             },
         },
