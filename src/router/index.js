@@ -3,6 +3,7 @@ import roles from './modules/roles.js';
 import clients from './modules/clients.js';
 import authentication from './modules/authentication.js';
 import setting from './modules/settings.js';
+import realms from './modules/realms.js';
 import {
   UsergroupAddOutlined,TrademarkCircleOutlined,
   ProfileOutlined, SettingOutlined, WalletOutlined,
@@ -19,7 +20,7 @@ const routes = [
   {
     path: '/home',
     name: 'Home',
-    component: () => import('@/views/home.vue'),
+    component: () => import('@/views/home/home.vue'),
     redirect: '/home/clients',
     children: [
       {
@@ -160,26 +161,19 @@ const routes = [
           type: 'Configure'
         },
       },
-      
+
       {
-        path: 'add-realm',
-        name: 'CreateRealm',
-        component: () => import('@/views/manage/realms/CreateRealm.vue'),
+        path: 'realms',
+        name: 'Realms',
+        component: () => import('@/views/realms/index.vue'),
+        redirect: '/home/realms/list',
         meta: {
-          title: 'createRealm',
-          pathname: '/home/add-realm',
-          type: 'realm'
+          title: 'Manage realms',
+          icon: h(UngroupOutlined),
+          pathname: '/home/realms',
+          type: 'Realms'
         },
-      },
-      {
-        path: 'realm-details',
-        name: 'DetailsRealm',
-        component: () => import('@/views/manage/realms/DetailsRealm.vue'),
-        meta: {
-          title: 'createRealm',
-          pathname: '/home/realm-details',
-          type: 'realm'
-        },
+        children: realms
       },
     ]
   },

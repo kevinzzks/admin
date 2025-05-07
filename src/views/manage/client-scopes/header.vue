@@ -161,13 +161,6 @@ export default {
     
 <style scoped>
 /*@import url(''); 引入css类*/
-.horizontal-header {
-  padding: 0;
-  margin-bottom: 40px;
-}
-.page-title-conter {
-  display: flex;
-  justify-content: space-between;
-}
+
 </style>
 

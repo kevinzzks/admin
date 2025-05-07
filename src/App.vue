@@ -17,7 +17,7 @@ export default {
     //     clientId: 'myclient',
     //   });
     //   keycloak.init({
-    //     onLoad: 'login-required', 
+    //     onLoad: 'login-required',
     //     checkLoginIframe: false,
     //     redirectUri: window.location.origin
     //   }).then((authenticated) => {
@@ -33,19 +33,15 @@ export default {
     //   });
     // }
     // initKeycloak();
-
+    const urlParams = new URLSearchParams(window.location.search); // 获取 URL 查询参数
+    const realm = urlParams.get('realm') || this.$store.state.local.realm || ''; // 获取领域信息
+    const clientId = urlParams.get('clientId') || this.$store.state.local.clientId || ''; // 获取客户端 ID
+    this.$store.commit('local/setRealmName', realm);
+    this.$store.commit('local/setClientId', clientId);
   },
 }
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  color: #2c3e50;
-  height: 100vh;
-  width: 100vw;
-}
-@import './styles/index.scss';
+@import "./styles/index.scss";
 </style>

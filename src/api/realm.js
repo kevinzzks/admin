@@ -3,7 +3,7 @@ import store from "@/store/index.js"
 // 
 async function getRealmList() {
 
-    let realm = store.state.login.realm;
+    let realm = store.state.local.realm;
     let pushDate = {
         "first": 0,
         "max": 11,
@@ -16,8 +16,8 @@ async function getRealmList() {
         withCredentials: true
     })
 }
-async function getRealm() {
-    let realm = store.state.login.realm;
+async function getRealmDetails() {
+    let realm = store.state.local.realm;
     return await http({
         method: "get",
         url: http.adornUrl(`/admin/realms/${realm}`),
@@ -26,7 +26,7 @@ async function getRealm() {
     })
 }
 async function setRealm(data) {
-    let realm = store.state.login.realm;
+    let realm = store.state.local.realm;
     return await http({
         method: "put",
         url: http.adornUrl(`/admin/realms/${realm}`),
@@ -35,5 +35,5 @@ async function setRealm(data) {
     })
 }
 export default {
-    getRealmList,getRealm,setRealm
+    getRealmList,getRealmDetails,setRealm
 } 

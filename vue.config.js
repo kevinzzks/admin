@@ -15,11 +15,17 @@ module.exports = defineConfig({
     open: true, // 启动后自动打开浏览器
     proxy: {
       '/proxyApi': {
+        target: 'https://global-test.lenovomm.cn/keycloak',
+        pathRewrite: { '^/proxyApi': '' }, // 重写以 /api 开头的路径
+        secure: false,
+        changeOrigin: true // 必须设置，用于虚拟主机的情况
+      },
+      '/proxyApiDEV': {
         target: 'https://10.96.177.104:8443/',
         pathRewrite: { '^/proxyApi': '' }, // 重写以 /api 开头的路径
         secure: false,
         changeOrigin: true // 必须设置，用于虚拟主机的情况
-      }
+      },
     }
   },
   chainWebpack: config => {

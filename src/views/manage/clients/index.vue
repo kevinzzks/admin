@@ -2,7 +2,7 @@
 <template>
   <div>
     
-    <Header /> <!-- 引入header.vue组件 -->
+    <Header></Header> <!-- 引入header.vue组件 -->
     <router-view />
   </div>
 </template>

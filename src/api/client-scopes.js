@@ -2,7 +2,7 @@ import http from '@/utils/request'
 import store from "@/store/index.js"
 // 查询roles角色
 async function getClientScopes() {
-    let realm = store.state.login.realm;
+    let realm = store.state.local.realm;
     return await http({
         method: "get",
         url: http.adornUrl(`/admin/realms/${realm}/client-scopes`),
@@ -11,7 +11,7 @@ async function getClientScopes() {
     })
 }
 async function getDefaultClientScopes() {
-    let realm = store.state.login.realm;
+    let realm = store.state.local.realm;
     return await http({
         method: "get",
         url: http.adornUrl(`/admin/realms/${realm}/default-default-client-scopes`),
@@ -20,7 +20,7 @@ async function getDefaultClientScopes() {
     })
 }
 async function getOptionalClientScopes() {
-    let realm = store.state.login.realm;
+    let realm = store.state.local.realm;
     return await http({
         method: "get",
         url: http.adornUrl(`/admin/realms/${realm}/default-optional-client-scopes`),
@@ -29,7 +29,7 @@ async function getOptionalClientScopes() {
     })
 }
 async function updateAssignedType(data) {
-    let realm = store.state.login.realm;
+    let realm = store.state.local.realm;
     return await http({
         method: data.method,
         url: http.adornUrl(`/admin/realms/${realm}/default-${data.type}-client-scopes/${data.id}`),

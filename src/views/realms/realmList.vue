@@ -1,49 +1,25 @@
 <!-- Dom模板 -->
 <template>
   <div>
-    <div class="custom-page-header">
-      <div>
-        <h2 class="page-title">Sessions</h2>
-        <p class="page-description">
-          {{$t('sessionExplain')}}
-          <a
-            href="https://www.keycloak.org/docs/latest/server_admin/index.html#managing-user-sessions"
-          >
-            {{ $t('learnMore') }}
-            <ExportOutlined />
-          </a>
-        </p>
-      </div>
-      <a-dropdown placement="bottom" :arrow="{ pointAtCenter: true }">
-        <a-button>
-          Action
-          <DownOutlined />
-        </a-button>
-        <template #overlay>
-          <a-menu>
-            <a-menu-item>
-              <a href="javascript:;" @click="open=true">Sign out all active sessions</a>
-            </a-menu-item>
-          </a-menu>
-        </template>
-      </a-dropdown>
-    </div>
     <a-table :columns="columns" :pagination="false" :data-source="sourceData" :scroll="{ y: 440 }">
       <template #bodyCell="{ column, text, record }">
-        <template v-if="column.dataIndex === 'username'">
+        <template v-if="column.dataIndex === 'clientId'">
           <a @click="goDetails(record)">{{ text }}</a>
         </template>
-        <template v-if="column.dataIndex === 'start'">
-         {{formatTimestamp(text) }}
-        </template>
-        
-        <template v-else-if="column.dataIndex === 'clients'">
-          <a>{{ extractClientValue(record.clients) }}</a>
+        <template v-else-if="column.dataIndex === 'name'">{{ text.replace(/^\$\{(.*)\}$/, '$1') }}</template>
+        <template v-else-if="column.dataIndex === 'protocol'">{{ text ? text : 'OpenID Connect' }}</template>
+        <template v-else-if="column.dataIndex === 'description'">{{ text ? text : '——' }}</template>
+        <template v-else-if="column.dataIndex === 'baseUrl'">
+          <span v-if="!text">——</span>
+          <a v-else-if="text.length>10" :href="text">
+            {{ text ? $reqUrl + text : '' }}
+            <ExportOutlined />
+          </a>
         </template>
         <template v-else-if="column.dataIndex === 'operation'">
           <a-popover placement="bottomRight" trigger="click">
             <template #content>
-              <a @click="onDelete(record.key)">Sign out</a>
+              <a @click="onOpen(record.key)">{{$t('delete')}}</a>
             </template>
             <MoreOutlined />
           </a-popover>
@@ -67,14 +43,17 @@
               </template>
             </a-input-search>
           </a-space>
-
+          <a-space class="create-button">
+            <a-button type="primary" size="large" @click="onCreateRule">Create role</a-button>
+          </a-space>
           <a-space>
             <a-button @click="onRefresh" size="large" class="Refresh" type="text">
               <SyncOutlined />Refresh
             </a-button>
           </a-space>
         </div>
-
+      </template>
+      <template #footer>
         <a-space>
           <a-pagination
             @change="onPagination"
@@ -85,13 +64,12 @@
           />
         </a-space>
       </template>
-      <!-- <template #footer>Footer</template> -->
     </a-table>
     <a-modal centered v-model:open="open" :title="$t('roleDeleteConfirm')">
       <p>This action will permanently delete the role "admin" and cannot be undone.</p>
       <template #footer>
         <a-button key="back" type="text" @click="handleCancel">{{$t('cancel')}}</a-button>
-        <a-button key="submit" type="primary" @click="handleOk">Confirm</a-button>
+        <a-button key="submit" danger type="primary" @click="handleOk">{{$t('delete')}}</a-button>
       </template>
     </a-modal>
   </div>
@@ -100,48 +78,26 @@
 <script>
 import api from '@/api/index.js';
 import {
-  ArrowRightOutlined, SyncOutlined, MoreOutlined, ExportOutlined, DownOutlined
+  ArrowRightOutlined, SyncOutlined, MoreOutlined, ExportOutlined,
 } from '@ant-design/icons-vue';
 export default {
   name: 'LoGin',
   components: {
-    ArrowRightOutlined, SyncOutlined, MoreOutlined, ExportOutlined, DownOutlined
+    ArrowRightOutlined, SyncOutlined, MoreOutlined, ExportOutlined,
   },
   data() {
     return {
-      // 					
+      // Name	Display name
       columns: [
         {
-          title: 'User',
-          dataIndex: 'username',
-          width: 120,
-        },
-
-        {
-          title: 'Type',
-          dataIndex: 'type',
-          width: 120,
+          title: this.$t('name'),
+          dataIndex: 'name',
+          width: 250,
         },
         {
-          title: 'Started',
-          dataIndex: 'start',
-          width: 200,
-        },
-        {
-          title: 'Last access',
-          dataIndex: 'lastAccess',
-          width: 200,
-          customRender: ({ text }) => this.formatTimestamp(text), // 使用格式化方法
-        },
-        {
-          title: 'IP address',
-          dataIndex: 'ipAddress',
-          width: 150,
-        },
-        {
-          title: 'Clients',
-          dataIndex: 'clients',
-          width: 150,
+          title: this.$t('displayName'),
+          dataIndex: 'displayName',
+          width: 250,
         },
         {
           title: 'operation',
@@ -164,8 +120,7 @@ export default {
   },
   // 生命周期 - 创建完成（访问当前this实例）
   created() {
-    this.getSessions({ first: 0, max: 11 }, 'reset', true); // 获取数据
-
+    this.getRealmList({ first: 0, max: 11 }, 'reset', true); // 获取当前realm列表
   },
 
   // 生命周期 - 挂载完成（访问DOM元素）
@@ -177,19 +132,18 @@ export default {
   },
   // Vue方法定义
   methods: {
-    async getSessions(data = {}, type = 'add', token = true) {
+    async getRealmList(data = {}, type = 'add', token = true) {
       if (token) {
         await this.$store.dispatch('login/getToken', {})
       }
 
-      api.getSessions(data).then(res => {
+      api.getRealmList(data).then(res => {
         if (res.status === 200) {
           if (res.data) {
             let newData = res.data.map(item => {
               return {
                 ...item,
-                key: item.id, // 设置唯一标识 replace
-                baseUrl: item.baseUrl ? item.baseUrl : '', // 处理baseUrl
+                key: item.id, // 设置唯一标识
               };
             });
             // this.data = newData; // 只显示前 pageSize 条数据
@@ -217,44 +171,17 @@ export default {
         this.$message.error(err)
       })
     },
-    // 格式化时间戳为指定格式
-    formatTimestamp(timestamp) {
-      console.log(timestamp)
-      if (!timestamp) return '——';
-      const date = new Date(timestamp);
-      return date.toLocaleString('en-US', {
-        month: 'numeric',
-        day: 'numeric',
-        year: 'numeric',
-        hour: 'numeric',
-        minute: 'numeric',
-        second: 'numeric',
-        hour12: true,
-      });
-    },
-    // 处理登出操作
+    // 处理删除操作
     onDelete(id) {
-      api.delSession({ id }).then(res => {
-        if (res.status === 204 || res.status === 200) {
-          this.$message.success('登出成功！');
+      api.deleteClients({ id }).then(res => {
+        if (res.status === 204) {
+          this.$message.success('删除成功！');
+          this.open = false; // 关闭加载状态
           let data = { first: (this.pagination.current - 1) * this.pagination.pageSize, max: this.pagination.pageSize + 1 };
           this.data = this.data.filter(item => item.key !== id); // 更新本地数据
-          this.getSessions(data, 'add', true); // 刷新数据
+          this.getRealmList(data, 'add', true); // 刷新数据
         } else {
-          this.$message.error('登出失败！')
-        }
-      }).catch(err => {
-        this.$message.error(err)
-      })
-    },
-    //
-    onDeletes() {
-      api.delSessions().then(res => {
-        if (res.status === 204 || res.status === 200) {
-          this.$message.success('全部登出成功！');
-          this.$router.push('/login')
-        } else {
-          this.$message.error('登出失败！')
+          this.$message.error('删除失败！')
         }
       }).catch(err => {
         this.$message.error(err)
@@ -264,7 +191,7 @@ export default {
     onSearch(searchValue) {
       let data = { search: searchValue, first: 0, max: this.pagination.pageSize + 1 }
       this.pagination.current = 1;
-      this.getSessions(data, 'reset', true); // 获取数据
+      this.getRealmList(data, 'reset', true); // 获取数据
     },
     // 处理Refresh
     onRefresh() {
@@ -274,36 +201,51 @@ export default {
         current: 1,
       }
       let data = { first: 0, max: 11 }
-      this.getSessions(data, 'reset', true); // 获取数据
+      this.getRealmList(data, 'reset', true); // 获取数据
     },
-    // 处理创建操作
-    onCreateRule() {
-      this.$router.push('/home/roles/new')
-    },
+    
     // 处理分页操作
     onPagination(current, pageSize) {
       this.pagination.current = current
       this.pagination.pageSize = pageSize
       let data = { first: (this.pagination.current - 1) * this.pagination.pageSize, max: this.pagination.pageSize + 1 };
-      this.getSessions(data, 'add', true); // 获取数据
+      this.getRealmList(data, 'add', true); // 获取数据
+    },
+    // 处理创建操作
+    onCreateRule() {
+      this.$router.push('/home/roles/new')
     },
     // 处理跳转到详情页操作
     goDetails(record) {
-      this.$router.push({ path: '/home/users', query: { id: record.id } })
+      this.$router.push({ path: '/home/roles/details', query: { id: record.id } })
     },
 
+    onOpen(e) {
+      this.open = true;
+      this.delId = e; // 获取要删除的角色ID
+    },
     handleOk() {
-      this.onDeletes()
+      this.onDelete(this.delId)
     },
 
     handleCancel() {
       this.open = false;
     },
 
-    extractClientValue(clients) {
-      // 使用 Object.values 提取对象中的值
-      const clientValues = Object.values(clients);
-      return clientValues.length > 0 ? clientValues[0] : '——'; // 如果有值，返回第一个值，否则返回占位符
+    onExport(record) {
+      // console.log(record);
+      this.$message.success('导出成功！')
+      // 添加导出逻辑
+      const jsonData = JSON.stringify(record, null, 2);
+      const blob = new Blob([jsonData], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `${record.name.replace(/^\$\{(.*)\}$/, '$1') || 'export'}.json`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
     },
   }
 }
@@ -311,12 +253,6 @@ export default {
     
 <style scoped>
 /*@import url(''); 引入css类*/
-.custom-page-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-}
 
 </style>
 

@@ -4,7 +4,7 @@
     <!-- Dom内容 -->
     <a-layout class="login-layout" style="height: 100vh; background: #fff">
       <a-layout-header class="header" style="background: #fff; padding: 0">
-        <div class="logo" />
+        <div class="logo"> <!-- Logo区域 --></div>
         <a-menu
           mode="horizontal"
           default-selected-keys="['1']"
@@ -12,6 +12,7 @@
           style="line-height: 64px"
         >
           <a-menu-item key="1">登录</a-menu-item>
+          <a-menu-item key="2">注册</a-menu-item> <!-- 添加注册菜单项 -->
         </a-menu>
       </a-layout-header>
       <a-layout-content style="padding: 24px; background: #fff; min-height: 280px">
@@ -110,7 +111,12 @@ export default {
           this.$Cookies.set('access_token', access_token, 1); // 设置 Cookie，有效期为 1 天
           this.$Cookies.set('refresh_token', refresh_token, 1)
           this.$message.success('登录成功！')
-          this.$router.push({ path: '/home' })
+          if (this.$route.query.name) {
+            this.$router.push({ name: this.$route.query.name })
+          }else {
+            this.$router.push({ path: '/home' })
+          }
+         
         } else {
           this.$message.error('登录失败！')
         }

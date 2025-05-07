@@ -87,7 +87,7 @@ http.adornUrl = (actionName) => {
   return (
     (process.env.NODE_ENV !== "production"
       ? "/proxyApi"
-      : location.origin) + actionName
+      : location.origin + '/keycloak') + actionName
   );
 };
 

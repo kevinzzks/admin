@@ -56,7 +56,8 @@
             </a-button>
           </a-space>
         </div>
-
+      </template>
+      <template #footer>
         <a-space>
           <a-pagination
             @change="onPagination"
@@ -67,7 +68,6 @@
           />
         </a-space>
       </template>
-      <!-- <template #footer>Footer</template> -->
     </a-table>
     <a-modal centered v-model:open="open" :title="$t('roleDeleteConfirm')">
       <p>This action will permanently delete the role "admin" and cannot be undone.</p>
@@ -273,13 +273,6 @@ export default {
     
 <style scoped>
 /*@import url(''); 引入css类*/
-.horizontal-header {
-  padding: 0;
-  margin-bottom: 40px;
-}
-.page-title-conter {
-  display: flex;
-  justify-content: space-between;
-}
+
 </style>
 

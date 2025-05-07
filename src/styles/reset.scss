@@ -16,8 +16,9 @@ embed {
 }
 
 /* force a vertical scrollbar to prevent a jumpy page */
-html {
-  overflow-y: scroll;
+html, body{
+  height: 100vh;
+  width: 100vw;
 }
 
 /* we use a lot of ULs that aren't bulleted. 
@@ -191,12 +192,6 @@ input:disabled {
 input,
 button {
   outline: none !important;
-}
-
-html,
-body {
-  height: 100%;
-  width: 100%;
 }
 
 body,

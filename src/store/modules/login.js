@@ -5,18 +5,24 @@ export default {
     state: {
       exampleStateA: 'Hello from Module A',
       client: {},
-      realm: 'master',
+      realmBase: 'master',
+      clientIdBase: 'admin-cli',
       realmDetails: {},
     },
     mutations: {
       setExampleStateA(state, payload) {
         state.exampleStateA = payload;
       },
+     
       setClient(state, payload) {
         state.client = payload;
       },
-      setRealm(state, payload) {
-        state.realm = payload;
+     
+      setClientIdBase(state, payload) {
+        state.clientIdBase = payload;
+      },
+      setRealmBase(state, payload) {
+        state.realmBase = payload;
       },
       setRealmDetails(state, payload) {
         console.log(payload);

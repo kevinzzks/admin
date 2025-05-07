@@ -20,29 +20,16 @@
       mode="horizontal"
       :items="items"
     />
-    <a-modal centered v-model:open="open" :title="$t('roleDeleteConfirm')">
-      <p>This action will permanently delete the role "admin" and cannot be undone.</p>
-      <template #footer>
-        <a-button key="back" type="text" @click="handleCancel">{{$t('cancel')}}</a-button>
-        <a-button
-          key="submit"
-          danger
-          type="primary"
-          :loading="loading"
-          @click="handleOk"
-        >{{$t('delete')}}</a-button>
-      </template>
-    </a-modal>
   </div>
 </template>
     
 <script>
-// import api from '@/api/index';
-import { ExportOutlined } from '@ant-design/icons-vue'; // 添加 ExportOutlined 图标
+// import api from '@/api/index'; 
+import { ExportOutlined } from '@ant-design/icons-vue'; 
 
 export default {
   name: 'RolesHeader',
-  components: { ExportOutlined }, // 注册 ExportOutlined 组件
+  components: { ExportOutlined }, 
   data() {
     return {
       current: ['ClientsList'],
@@ -79,14 +66,6 @@ export default {
 </script>
     
 <style scoped>
-/*@import url(''); 引入css类*/
-.horizontal-header {
-  padding: 0;
-  margin-bottom: 40px;
-}
-.page-title-conter {
-  display: flex;
-  justify-content: space-between;
-}
+
 </style>
 
